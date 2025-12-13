@@ -216,6 +216,10 @@ typedef int ImGuiMouseCursor;       // -> enum ImGuiMouseCursor_     // Enum: A 
 typedef int ImGuiStyleVar;          // -> enum ImGuiStyleVar_        // Enum: A variable identifier for styling
 typedef int ImGuiTableBgTarget;     // -> enum ImGuiTableBgTarget_   // Enum: A color target for TableSetBgColor()
 
+typedef int ImGuiTextEditorPalette;         // -> enum ImGuiTextEditorPalette_          // Enum: A palette identifier for Text Editor
+typedef int ImGuiTextEditorPaletteColor;    // -> enum ImGuiTextEditorPaletteColor_     // Enum: A palette color identifier for Text Editor
+typedef int ImGuiTextEditorLanguage;        // -> enum ImGuiTextEditorLanguage_         // Enum: A language identifier for Text Editor
+
 // Flags (declared as int to allow using as flags without overhead, and to not pollute the top of this file)
 // - Tip: Use your programming IDE navigation facilities on the names in the _central column_ below to find the actual flags/enum lists!
 //   - In Visual Studio: CTRL+comma ("Edit.GoToAll") can follow symbols inside comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
@@ -1921,6 +1925,48 @@ enum ImGuiMouseSource : int
     ImGuiMouseSource_TouchScreen,       // Input is coming from a touch screen (no hovering prior to initial press, less precise initial press aiming, dual-axis wheeling possible).
     ImGuiMouseSource_Pen,               // Input is coming from a pressure/magnetic pen (often used in conjunction with high-sampling rates).
     ImGuiMouseSource_COUNT
+};
+
+enum ImGuiTextEditorPalette_
+{
+    Dark,
+    Light,
+    RetroBlue,
+    GameMaker
+};
+
+enum ImGuiTextEditorPaletteColor_
+{
+    Default,
+    Keyword,
+    Number,
+    String,
+    CharLiteral,
+    Punctuation,
+    Preprocessor,
+    Identifier,
+    KnownIdentifier,
+    PreprocIdentifier,
+    CommentSingleLine,
+    CommentMultiLine,
+    Background,
+    Cursor,
+    Selection,
+    ErrorMarker,
+    Breakpoint,
+    LineNumber,
+    CurrentLineFill,
+    CurrentLineFillInactive,
+    CurrentLineEdge
+};
+
+enum ImGuiTextEditorLanguage_
+{
+    CPlusPlus,
+    HLSL,
+    GLSL,
+    LUA,
+    GML
 };
 
 // Enumeration for ImGui::SetNextWindow***(), SetWindow***(), SetNextItem***() functions

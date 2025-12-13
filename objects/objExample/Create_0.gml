@@ -40,6 +40,24 @@ if ini_filename != "" {
 /// Optional: Set the main state active.
 // imgui_state.Use();
 
+var _text =
+@'
+function foo() { return bar; }
+
+if (application_surface == -1)
+	return undefined;
+	
+show_debug_message(/* Hmmm... */ "OOF!");
+'
+editor = new ImGuiTextEditor("My Editor", _text, 0);
+editor.SetPalette(3);
+editor.SetLanguage(4);
+
+LANG		= ["C++", "HLSL", "GLSL", "LUA", "GML"];
+SEL_LANG	= 4;
+PAL			= ["Dark", "Light", "Retro Blue", "GameMaker"];
+SEL_PAL		= 3;
+
 /// -----------------------------------------------------------------------------
 
 // Fonts

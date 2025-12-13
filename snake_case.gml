@@ -1,7 +1,7 @@
 /**
 *  This script includes snake_case function defintions for ImGui_GM, as an alternative to the namespaced convention
 *  To use, just drop this script into your project with ImGui_GM
-*  Generated at 11/12/2025, 6:15:21 pm
+*  Generated at 13/12/2025, 7:07:13 pm
 */
 
 /// @function imgui_initialize
@@ -1421,6 +1421,282 @@ function imgui_drawlist_flags_set(list, flags) {
 /// @return {Bool}
 function imgui_drawlist_flag_toggle(list, flag) {
 	return __imgui_drawlist_flag_toggle(list, flag);
+}
+
+/// @function imgui_text_editor_create()
+/// @return {Unknown<unset>}
+function imgui_text_editor_create() {
+	return __imgui_text_editor_create();
+}
+
+/// @function imgui_text_editor_destroy(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_destroy(_handle) {
+	return __imgui_text_editor_destroy(_handle);
+}
+
+/// @function imgui_text_editor_cleanup()
+/// @return {Unknown<unset>}
+function imgui_text_editor_cleanup() {
+	return __imgui_text_editor_cleanup();
+}
+
+/// @function imgui_text_editor_set_text(_handle, _text)
+/// @argument {Real} _handle
+/// @argument {String} _text
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_text(_handle, _text) {
+	return __imgui_text_editor_set_text(_handle, _text);
+}
+
+/// @function imgui_text_editor_get_text(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_text(_handle) {
+	return __imgui_text_editor_get_text(_handle);
+}
+
+/// @function imgui_text_editor_set_language(_handle, _languageID)
+/// @argument {Real} _handle
+/// @argument {Real} [_languageID=0]
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_language(_handle, _languageID=0) {
+	return __imgui_text_editor_set_language(_handle, _languageID);
+}
+
+/// @function imgui_text_editor_render(_handle, _title, _width, _height, _flags)
+/// @argument {Real} _handle
+/// @argument {String} _title
+/// @argument {Real} [_width=0]
+/// @argument {Real} [_height=0]
+/// @argument {Real} [_flags=0]
+/// @return {Unknown<unset>}
+function imgui_text_editor_render(_handle, _title, _width=0, _height=0, _flags=0) {
+	return __imgui_text_editor_render(_handle, _title, _width, _height, _flags);
+}
+
+/// @function imgui_text_editor_is_read_only(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_is_read_only(_handle) {
+	return __imgui_text_editor_is_read_only(_handle);
+}
+
+/// @function imgui_text_editor_set_read_only(_handle, _readOnly)
+/// @argument {Real} _handle
+/// @argument {Bool} _readOnly
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_read_only(_handle, _readOnly) {
+	return __imgui_text_editor_set_read_only(_handle, _readOnly);
+}
+
+/// @function imgui_text_editor_is_text_modified(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_is_text_modified(_handle) {
+	return __imgui_text_editor_is_text_modified(_handle);
+}
+
+/// @function imgui_text_editor_has_selection(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_has_selection(_handle) {
+	return __imgui_text_editor_has_selection(_handle);
+}
+
+/// @function imgui_text_editor_select_all(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_select_all(_handle) {
+	return __imgui_text_editor_select_all(_handle);
+}
+
+/// @function imgui_text_editor_select_word_under_cursor(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_select_word_under_cursor(_handle) {
+	return __imgui_text_editor_select_word_under_cursor(_handle);
+}
+
+/// @function imgui_text_editor_select_line(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_select_line(_handle, _line) {
+	return __imgui_text_editor_select_line(_handle, _line);
+}
+
+/// @function imgui_text_editor_get_selected_text(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_selected_text(_handle) {
+	return __imgui_text_editor_get_selected_text(_handle);
+}
+
+/// @function imgui_text_editor_set_cursor_pos_line_column(_handle, _line, _column)
+/// @argument {Real} _handle
+/// @argument {Real} [_line=1]
+/// @argument {Real} [_column=1]
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_cursor_pos_line_column(_handle, _line=1, _column=1) {
+	return __imgui_text_editor_set_cursor_pos_line_column(_handle, _line, _column);
+}
+
+/// @function imgui_text_editor_get_cursor_pos_line(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_cursor_pos_line(_handle) {
+	return __imgui_text_editor_get_cursor_pos_line(_handle);
+}
+
+/// @function imgui_text_editor_get_cursor_pos_column(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_cursor_pos_column(_handle) {
+	return __imgui_text_editor_get_cursor_pos_column(_handle);
+}
+
+/// @function imgui_text_editor_can_undo(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_can_undo(_handle) {
+	return __imgui_text_editor_can_undo(_handle);
+}
+
+/// @function imgui_text_editor_can_redo(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_can_redo(_handle) {
+	return __imgui_text_editor_can_redo(_handle);
+}
+
+/// @function imgui_text_editor_undo(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_undo(_handle) {
+	return __imgui_text_editor_undo(_handle);
+}
+
+/// @function imgui_text_editor_redo(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_redo(_handle) {
+	return __imgui_text_editor_redo(_handle);
+}
+
+/// @function imgui_text_editor_is_overwrite(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_is_overwrite(_handle) {
+	return __imgui_text_editor_is_overwrite(_handle);
+}
+
+/// @function imgui_text_editor_copy(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_copy(_handle) {
+	return __imgui_text_editor_copy(_handle);
+}
+
+/// @function imgui_text_editor_paste(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_paste(_handle) {
+	return __imgui_text_editor_paste(_handle);
+}
+
+/// @function imgui_text_editor_cut(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_cut(_handle) {
+	return __imgui_text_editor_cut(_handle);
+}
+
+/// @function imgui_text_editor_delete(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_delete(_handle) {
+	return __imgui_text_editor_delete(_handle);
+}
+
+/// @function imgui_text_editor_insert_text(_handle, _text)
+/// @argument {Real} _handle
+/// @argument {String} _text
+/// @return {Unknown<unset>}
+function imgui_text_editor_insert_text(_handle, _text) {
+	return __imgui_text_editor_insert_text(_handle, _text);
+}
+
+/// @function imgui_text_editor_get_tab_size(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_tab_size(_handle) {
+	return __imgui_text_editor_get_tab_size(_handle);
+}
+
+/// @function imgui_text_editor_set_tab_size(_handle, _size)
+/// @argument {Real} _handle
+/// @argument {Real} _size
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_tab_size(_handle, _size) {
+	return __imgui_text_editor_set_tab_size(_handle, _size);
+}
+
+/// @function imgui_text_editor_is_showing_whitespaces(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_is_showing_whitespaces(_handle) {
+	return __imgui_text_editor_is_showing_whitespaces(_handle);
+}
+
+/// @function imgui_text_editor_set_show_whitespaces(_handle, _enable)
+/// @argument {Real} _handle
+/// @argument {Bool} _enable
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_show_whitespaces(_handle, _enable) {
+	return __imgui_text_editor_set_show_whitespaces(_handle, _enable);
+}
+
+/// @function imgui_text_editor_is_colorizer_enabled(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_is_colorizer_enabled(_handle) {
+	return __imgui_text_editor_is_colorizer_enabled(_handle);
+}
+
+/// @function imgui_text_editor_set_colorizer_enable(_handle, _enable)
+/// @argument {Real} _handle
+/// @argument {Bool} _enable
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_colorizer_enable(_handle, _enable) {
+	return __imgui_text_editor_set_colorizer_enable(_handle, _enable);
+}
+
+/// @function imgui_text_editor_set_palette(_handle, _paletteID)
+/// @argument {Real} _handle
+/// @argument {Real} _paletteID
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_palette(_handle, _paletteID) {
+	return __imgui_text_editor_set_palette(_handle, _paletteID);
+}
+
+/// @function imgui_text_editor_get_palette_color(_handle, _index)
+/// @argument {Real} _handle
+/// @argument {Real} _index
+/// @return {Real}
+function imgui_text_editor_get_palette_color(_handle, _index) {
+	return __imgui_text_editor_get_palette_color(_handle, _index);
+}
+
+/// @function imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha)
+/// @argument {Real} _handle
+/// @argument {Real} _index
+/// @argument {Real} _color
+/// @argument {Real} [_alpha=255]
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha=255) {
+	return __imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha);
 }
 
 /// @function imgui_memory_editor_window(title, buffer, offset, size)

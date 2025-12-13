@@ -1567,6 +1567,319 @@ function ImGui() constructor {
 		return __imgui_drawlist_flag_toggle(list, flag);
 	}
 
+	/// @function TextEditorCreate()
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCreate = function() {
+		return __imgui_text_editor_create();
+	}
+
+	/// @function TextEditorDestroy(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorDestroy = function(_handle) {
+		return __imgui_text_editor_destroy(_handle);
+	}
+
+	/// @function TextEditorCleanup()
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCleanup = function() {
+		return __imgui_text_editor_cleanup();
+	}
+
+	/// @function TextEditorSetText(_handle, _text)
+	/// @argument {Real} _handle
+	/// @argument {String} _text
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetText = function(_handle, _text) {
+		return __imgui_text_editor_set_text(_handle, _text);
+	}
+
+	/// @function TextEditorGetText(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetText = function(_handle) {
+		return __imgui_text_editor_get_text(_handle);
+	}
+
+	/// @function TextEditorSetLanguage(_handle, _languageID)
+	/// @argument {Real} _handle
+	/// @argument {Real} [_languageID=0]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetLanguage = function(_handle, _languageID=0) {
+		return __imgui_text_editor_set_language(_handle, _languageID);
+	}
+
+	/// @function TextEditorRender(_handle, _title, _width, _height, _flags)
+	/// @argument {Real} _handle
+	/// @argument {String} _title
+	/// @argument {Real} [_width=0]
+	/// @argument {Real} [_height=0]
+	/// @argument {Real} [_flags=0]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRender = function(_handle, _title, _width=0, _height=0, _flags=0) {
+		return __imgui_text_editor_render(_handle, _title, _width, _height, _flags);
+	}
+
+	/// @function TextEditorIsReadOnly(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorIsReadOnly = function(_handle) {
+		return __imgui_text_editor_is_read_only(_handle);
+	}
+
+	/// @function TextEditorSetReadOnly(_handle, _readOnly)
+	/// @argument {Real} _handle
+	/// @argument {Bool} _readOnly
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetReadOnly = function(_handle, _readOnly) {
+		return __imgui_text_editor_set_read_only(_handle, _readOnly);
+	}
+
+	/// @function TextEditorIsTextModified(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorIsTextModified = function(_handle) {
+		return __imgui_text_editor_is_text_modified(_handle);
+	}
+
+	/// @function TextEditorHasSelection(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorHasSelection = function(_handle) {
+		return __imgui_text_editor_has_selection(_handle);
+	}
+
+	/// @function TextEditorSelectAll(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSelectAll = function(_handle) {
+		return __imgui_text_editor_select_all(_handle);
+	}
+
+	/// @function TextEditorSelectWordUnderCursor(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSelectWordUnderCursor = function(_handle) {
+		return __imgui_text_editor_select_word_under_cursor(_handle);
+	}
+
+	/// @function TextEditorSelectLine(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSelectLine = function(_handle, _line) {
+		return __imgui_text_editor_select_line(_handle, _line);
+	}
+
+	/// @function TextEditorGetSelectedText(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetSelectedText = function(_handle) {
+		return __imgui_text_editor_get_selected_text(_handle);
+	}
+
+	/// @function TextEditorSetCursorPosLineColumn(_handle, _line, _column)
+	/// @argument {Real} _handle
+	/// @argument {Real} [_line=1]
+	/// @argument {Real} [_column=1]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetCursorPosLineColumn = function(_handle, _line=1, _column=1) {
+		return __imgui_text_editor_set_cursor_pos_line_column(_handle, _line, _column);
+	}
+
+	/// @function TextEditorGetCursorPosLine(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetCursorPosLine = function(_handle) {
+		return __imgui_text_editor_get_cursor_pos_line(_handle);
+	}
+
+	/// @function TextEditorGetCursorPosColumn(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetCursorPosColumn = function(_handle) {
+		return __imgui_text_editor_get_cursor_pos_column(_handle);
+	}
+
+	/// @function TextEditorCanUndo(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCanUndo = function(_handle) {
+		return __imgui_text_editor_can_undo(_handle);
+	}
+
+	/// @function TextEditorCanRedo(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCanRedo = function(_handle) {
+		return __imgui_text_editor_can_redo(_handle);
+	}
+
+	/// @function TextEditorUndo(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorUndo = function(_handle) {
+		return __imgui_text_editor_undo(_handle);
+	}
+
+	/// @function TextEditorRedo(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRedo = function(_handle) {
+		return __imgui_text_editor_redo(_handle);
+	}
+
+	/// @function TextEditorIsOverwrite(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorIsOverwrite = function(_handle) {
+		return __imgui_text_editor_is_overwrite(_handle);
+	}
+
+	/// @function TextEditorCopy(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCopy = function(_handle) {
+		return __imgui_text_editor_copy(_handle);
+	}
+
+	/// @function TextEditorPaste(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorPaste = function(_handle) {
+		return __imgui_text_editor_paste(_handle);
+	}
+
+	/// @function TextEditorCut(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorCut = function(_handle) {
+		return __imgui_text_editor_cut(_handle);
+	}
+
+	/// @function TextEditorDelete(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorDelete = function(_handle) {
+		return __imgui_text_editor_delete(_handle);
+	}
+
+	/// @function TextEditorInsertText(_handle, _text)
+	/// @argument {Real} _handle
+	/// @argument {String} _text
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorInsertText = function(_handle, _text) {
+		return __imgui_text_editor_insert_text(_handle, _text);
+	}
+
+	/// @function TextEditorGetTabSize(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetTabSize = function(_handle) {
+		return __imgui_text_editor_get_tab_size(_handle);
+	}
+
+	/// @function TextEditorSetTabSize(_handle, _size)
+	/// @argument {Real} _handle
+	/// @argument {Real} _size
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetTabSize = function(_handle, _size) {
+		return __imgui_text_editor_set_tab_size(_handle, _size);
+	}
+
+	/// @function TextEditorIsShowingWhitespaces(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorIsShowingWhitespaces = function(_handle) {
+		return __imgui_text_editor_is_showing_whitespaces(_handle);
+	}
+
+	/// @function TextEditorSetShowWhitespaces(_handle, _enable)
+	/// @argument {Real} _handle
+	/// @argument {Bool} _enable
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetShowWhitespaces = function(_handle, _enable) {
+		return __imgui_text_editor_set_show_whitespaces(_handle, _enable);
+	}
+
+	/// @function TextEditorIsColorizerEnabled(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorIsColorizerEnabled = function(_handle) {
+		return __imgui_text_editor_is_colorizer_enabled(_handle);
+	}
+
+	/// @function TextEditorSetColorizerEnable(_handle, _enable)
+	/// @argument {Real} _handle
+	/// @argument {Bool} _enable
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetColorizerEnable = function(_handle, _enable) {
+		return __imgui_text_editor_set_colorizer_enable(_handle, _enable);
+	}
+
+	/// @function TextEditorSetPalette(_handle, _paletteID)
+	/// @argument {Real} _handle
+	/// @argument {Real} _paletteID
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetPalette = function(_handle, _paletteID) {
+		return __imgui_text_editor_set_palette(_handle, _paletteID);
+	}
+
+	/// @function TextEditorGetPaletteColor(_handle, _index)
+	/// @argument {Real} _handle
+	/// @argument {Real} _index
+	/// @context ImGui
+	/// @return {Real}
+	static TextEditorGetPaletteColor = function(_handle, _index) {
+		return __imgui_text_editor_get_palette_color(_handle, _index);
+	}
+
+	/// @function TextEditorSetPaletteColor(_handle, _index, _color, _alpha)
+	/// @argument {Real} _handle
+	/// @argument {Real} _index
+	/// @argument {Real} _color
+	/// @argument {Real} [_alpha=255]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetPaletteColor = function(_handle, _index, _color, _alpha=255) {
+		return __imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha);
+	}
+
 	/// @function MemoryEditorShowWindow(title, buffer, offset, size)
 	/// @argument {String} title
 	/// @argument {Real} buffer
@@ -4329,6 +4642,42 @@ function ImGui() constructor {
 		Mouse = 0,
 		TouchScreen,
 		Pen,
+	}
+
+	enum ImGuiTextEditorPalette {
+		Dark,
+		Light,
+		RetroBlue,
+	}
+
+	enum ImGuiTextEditorPaletteColor {
+		Default,
+		Keyword,
+		Number,
+		String,
+		CharLiteral,
+		Punctuation,
+		Preprocessor,
+		Identifier,
+		KnownIdentifier,
+		PreprocIdentifier,
+		CommentSingleLine,
+		CommentMultiLine,
+		Background,
+		Cursor,
+		Selection,
+		ErrorMarker,
+		Breakpoint,
+		LineNumber,
+		CurrentLineFill,
+		CurrentLineFillInactive,
+	}
+
+	enum ImGuiTextEditorLanguage {
+		CPlusPlus,
+		HLSL,
+		GLSL,
+		LUA,
 	}
 
 	enum ImGuiCond {

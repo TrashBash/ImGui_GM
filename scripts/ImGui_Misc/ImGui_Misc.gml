@@ -283,6 +283,198 @@ function ImGuiSelectionBasicStorage(size=0, preserve_order=undefined) constructo
     }
 }
 
+function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
+{
+	handle		= __imgui_text_editor_create();
+	title		= title;
+	
+	__imgui_text_editor_set_text(handle, initialText);
+	__imgui_text_editor_set_language(handle, languageID);
+	
+	static Destroy = function()
+	{
+		__imgui_text_editor_destroy(handle);
+	}
+	
+	static Render = function(title = title, width = 0, height = 0, flags = ImGuiChildFlags.None)
+	{
+		__imgui_text_editor_render(handle, title, width, height, flags);
+		return self;
+	}
+	
+	static GetText = function()
+	{
+		return __imgui_text_editor_get_text(handle);
+	}
+	
+	static SetText = function(text)
+	{
+		return __imgui_text_editor_set_text(handle, text);
+	}
+	
+	static InsertText = function(text)
+	{
+		return __imgui_text_editor_insert_text(handle, text);
+	}
+	
+	// @ STATE / READONLY
+	
+	static IsModified = function()
+	{
+		return __imgui_text_editor_is_text_modified(handle);
+	}
+	
+	static IsReadOnly = function()
+	{
+		return __imgui_text_editor_is_read_only(handle);
+	}
+	
+	static SetReadOnly = function(enable)
+	{
+		return __imgui_text_editor_set_read_only(handle, enable);
+	}
+	
+	// @ CURSOR / POSITION
+	
+	static GetLine = function()
+	{
+		return __imgui_text_editor_get_cursor_pos_line(handle);
+	}
+	
+	static GetColumn = function()
+	{
+		return __imgui_text_editor_get_cursor_pos_column(handle);
+	}
+	
+	static SetCursorPosition = function(line, column)
+	{
+		return __imgui_text_editor_set_cursor_pos_line_column(handle, line, column);
+	}
+	
+	// @ SELECTION
+	
+	static HasSelection = function()
+	{
+		return __imgui_text_editor_has_selection(handle);
+	}
+	
+	static GetSelectedText = function()
+	{
+		return __imgui_text_editor_get_selected_text(handle);
+	}
+	
+	static SelectAll = function()
+	{
+		return __imgui_text_editor_select_all(handle);
+	}
+	
+	static SelectLine = function(line)
+	{
+		return __imgui_text_editor_select_line(handle, line);
+	}
+	
+	// @ UNDO / REDO
+	
+	static CanUndo = function()
+	{
+		return __imgui_text_editor_can_undo(handle);
+	}
+	
+	static CanRedo = function()
+	{
+		return __imgui_text_editor_can_redo(handle);
+	}
+	
+	static Undo = function()
+	{
+		return __imgui_text_editor_undo(handle);
+	}
+	
+	static Redo = function()
+	{
+		return __imgui_text_editor_redo(handle);
+	}
+	
+	// @ CLIPBOARD / EDIT
+	
+	static IsOverwrite = function()
+	{
+		return __imgui_text_editor_is_overwrite(handle);
+	}
+	
+	static Copy = function()
+	{
+		return __imgui_text_editor_copy(handle);
+	}
+	
+	static Paste = function()
+	{
+		return __imgui_text_editor_paste(handle);
+	}
+	
+	static Cut = function()
+	{
+		return __imgui_text_editor_cut(handle);
+	}
+	
+	static Delete = function()
+	{
+		return __imgui_text_editor_delete(handle);
+	}
+	
+	// @ LANGUAGE / VISUALS
+	
+	static SetLanguage = function(languageID)
+	{
+		return __imgui_text_editor_set_language(handle, languageID);
+	}
+	
+	static SetPalette = function(paletteID)
+	{
+		return __imgui_text_editor_set_palette(handle, paletteID);
+	}
+
+	static GetPaletteColor = function(index)
+	{
+		return __imgui_text_editor_get_palette_color(handle, index);
+	}
+
+	static SetPaletteColor = function(index, color, a = 255)
+	{
+		return __imgui_text_editor_set_palette_color(handle, index, color, a);
+	}
+	
+	static SetTabSize = function(size)
+	{
+		return __imgui_text_editor_set_tab_size(handle, size);
+	}
+	
+	static GetTabSize = function()
+	{
+		return __imgui_text_editor_get_tab_size(handle);
+	}
+
+	static SetShowWhitespaces = function(enable)
+	{
+		return __imgui_text_editor_set_show_whitespaces(handle, enable);
+	}
+
+	static IsShowingWhitespaces = function()
+	{
+		return __imgui_text_editor_is_showing_whitespaces(handle);
+	}
+	
+	static SetColorizerEnable = function(enable)
+	{
+		return __imgui_text_editor_set_colorizer_enable(handle, enable);
+	}
+
+	static IsColorizerEnabled = function()
+	{
+		return __imgui_text_editor_is_colorizer_enabled(handle);
+	}
+}
+
 
 #macro IMGUI_PAYLOAD_TYPE_COLOR_3F     "_COL3F"    // (GML) int32: Standard type for colors, without alpha. User code may use this type.
 #macro IMGUI_PAYLOAD_TYPE_COLOR_4F     "_COL4F"    // (GML) struct: Standard type for colors. User code may use this type.

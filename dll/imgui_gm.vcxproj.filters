@@ -65,6 +65,7 @@
     </ClInclude>
     <ClInclude Include="imgui_gm_selectionstorage.h" />
     <ClInclude Include="imgui_gm_windowclass.h" />
+    <ClInclude Include="imgui\imgui_colortextedit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -175,5 +176,7 @@
     <ClCompile Include="imgui/imgui_widgets.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="gm\imgui_ext_colortextedit_gm.cpp" />
+    <ClCompile Include="imgui\imgui_colortextedit.cpp" />
   </ItemGroup>
 </Project>

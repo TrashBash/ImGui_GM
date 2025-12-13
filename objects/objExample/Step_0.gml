@@ -110,6 +110,63 @@ if (!init) {
 	init = true;	
 }
 
+ImGui.SetNextWindowSize(400, 300, ImGuiCond.Once);
+ImGui.SetNextWindowPos(500, 100, ImGuiCond.Once);
+ImGui.Begin("Editor");
+if (ImGui.CollapsingHeader("Settings"))
+{
+	editor.SetReadOnly(ImGui.Checkbox("Read Only", editor.IsReadOnly()));
+	editor.SetShowWhitespaces(ImGui.Checkbox("Show Whitespaces", editor.IsShowingWhitespaces()));
+	editor.SetColorizerEnable(ImGui.Checkbox("Colorizer", editor.IsColorizerEnabled()));
+	editor.SetTabSize(ImGui.SliderInt("Tab Size", editor.GetTabSize(), 1, 8));
+	if (ImGui.Button("Select all"))
+		editor.SelectAll();
+		
+	if (ImGui.BeginCombo("Language", LANG[SEL_LANG], 0))
+	{
+		for (var i = 0; i < 5; i++)
+		{
+			if (ImGui.Selectable(LANG[i], SEL_LANG == i))
+			{
+				SEL_LANG = i;
+				editor.SetLanguage(SEL_LANG);
+			}
+		}
+		
+		ImGui.EndCombo();
+	}
+	
+	if (ImGui.BeginCombo("Palette", PAL[SEL_PAL], 0))
+	{
+		for (var i = 0; i < 4; i++)
+		{
+			if (ImGui.Selectable(PAL[i], SEL_PAL == i))
+			{
+				SEL_PAL = i;
+				editor.SetPalette(SEL_PAL);
+			}
+		}
+		
+		ImGui.EndCombo();
+	}
+}
+editor.Render();
+ImGui.End();
+
+ImGui.SetNextWindowSize(200, 500, ImGuiCond.Once);
+ImGui.SetNextWindowPos(300, 100, ImGuiCond.Once);
+ImGui.Begin("Editor colors");
+
+	for (var i = 0; i < 14; i++)
+	{
+		ImGui.PushID(i);
+		editor.SetPaletteColor(i, ImGui.ColorEdit3($"###col", editor.GetPaletteColor(i)), 255);
+		ImGui.PopID();
+	}
+
+ImGui.End();
+
+/*
 // Main Window
 if (main_open) {
 	ImGui.SetNextWindowSize(room_width / 2, room_height / 2, ImGuiCond.Once);
@@ -435,6 +492,8 @@ if (imgui_demo_open) {
 
 ImGui.Begin("Two");
 ImGui.Text("These windows are docked inside of a dockspace via the DockBuilder API");
+
+
 ImGui.End();
 ImGui.Begin("Three");
 ImGui.TextColored("You can choose to include specific windows inside of split dock nodes!", c_yellow);
