@@ -341,6 +341,11 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 		return __imgui_text_editor_get_cursor_pos_line(handle);
 	}
 	
+	static GetTotalLines = function()
+	{
+		return __imgui_text_editor_get_total_lines(handle);
+	}
+	
 	static GetColumn = function()
 	{
 		return __imgui_text_editor_get_cursor_pos_column(handle);

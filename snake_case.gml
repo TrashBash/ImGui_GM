@@ -1,7 +1,7 @@
 /**
 *  This script includes snake_case function defintions for ImGui_GM, as an alternative to the namespaced convention
 *  To use, just drop this script into your project with ImGui_GM
-*  Generated at 14/12/2025, 6:16:50 pm
+*  Generated at 14/12/2025, 9:41:54 pm
 */
 
 /// @function imgui_initialize
@@ -1555,6 +1555,13 @@ function imgui_text_editor_get_cursor_pos_line(_handle) {
 /// @return {Unknown<unset>}
 function imgui_text_editor_get_cursor_pos_column(_handle) {
 	return __imgui_text_editor_get_cursor_pos_column(_handle);
+}
+
+/// @function imgui_text_editor_get_total_lines(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_total_lines(_handle) {
+	return __imgui_text_editor_get_total_lines(_handle);
 }
 
 /// @function imgui_text_editor_can_undo(_handle)

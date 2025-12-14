@@ -1719,6 +1719,14 @@ function ImGui() constructor {
 		return __imgui_text_editor_get_cursor_pos_column(_handle);
 	}
 
+	/// @function TextEditorGetTotalLines(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetTotalLines = function(_handle) {
+		return __imgui_text_editor_get_total_lines(_handle);
+	}
+
 	/// @function TextEditorCanUndo(_handle)
 	/// @argument {Real} _handle
 	/// @context ImGui

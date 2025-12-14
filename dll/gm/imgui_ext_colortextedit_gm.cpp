@@ -314,6 +314,15 @@ GMFUNC(__imgui_text_editor_get_cursor_pos_column)
 	__return_i64(Result, _coordinates.mColumn + 1);
 }
 
+GMFUNC(__imgui_text_editor_get_total_lines)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	__return_i64(Result, _editor->GetTotalLines());
+}
+
 // @ UNDO / REDO
 
 GMFUNC(__imgui_text_editor_can_undo)
