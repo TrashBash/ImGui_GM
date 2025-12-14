@@ -1,7 +1,7 @@
 /**
 *  This script includes snake_case function defintions for ImGui_GM, as an alternative to the namespaced convention
 *  To use, just drop this script into your project with ImGui_GM
-*  Generated at 13/12/2025, 7:07:13 pm
+*  Generated at 14/12/2025, 6:16:50 pm
 */
 
 /// @function imgui_initialize
@@ -1755,6 +1755,113 @@ function imgui_add_font_default() {
 /// @return {Real}
 function imgui_get_font_size() {
 	return __imgui_get_font_size();
+}
+
+/// @function imgui_guizmo_begin_frame()
+/// @return {Undefined}
+function imgui_guizmo_begin_frame() {
+	return __imgui_guizmo_begin_frame();
+}
+
+/// @function imgui_guizmo_set_orthographic(_isOrtho)
+/// @argument {Bool} _isOrtho
+/// @return {Bool}
+function imgui_guizmo_set_orthographic(_isOrtho) {
+	return __imgui_guizmo_set_orthographic(_isOrtho);
+}
+
+/// @function imgui_guizmo_is_using()
+/// @return {Bool}
+function imgui_guizmo_is_using() {
+	return __imgui_guizmo_is_using();
+}
+
+/// @function imgui_guizmo_is_over()
+/// @return {Bool}
+function imgui_guizmo_is_over() {
+	return __imgui_guizmo_is_over();
+}
+
+/// @function imgui_guizmo_manipulate(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix, _snap, _localBounds)
+/// @argument {Array<Real>} _viewMat
+/// @argument {Array<Real>} _projMat
+/// @argument {Real} _operation
+/// @argument {Real} _mode
+/// @argument {Array<Real>} _mdlMat
+/// @argument {Array<Real>} [_deltaMatrix=undefined]
+/// @argument {Array<Real>} [_snap=undefined]
+/// @argument {Array<Real>} [_localBounds=undefined]
+/// @return {Bool}
+function imgui_guizmo_manipulate(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix=undefined, _snap=undefined, _localBounds=undefined) {
+	return __imgui_guizmo_manipulate(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix, _snap, _localBounds);
+}
+
+/// @function imgui_guizmo_set_drawlist(_drawlist)
+/// @argument {Pointer} [_drawlist=undefined]
+/// @return {Undefined}
+function imgui_guizmo_set_drawlist(_drawlist=undefined) {
+	return __imgui_guizmo_set_drawlist(_drawlist);
+}
+
+/// @function imgui_guizmo_set_rect(_x, _y, _width, _height)
+/// @argument {Real} _x
+/// @argument {Real} _y
+/// @argument {Real} _width
+/// @argument {Real} _height
+/// @return {Undefined}
+function imgui_guizmo_set_rect(_x, _y, _width, _height) {
+	return __imgui_guizmo_set_rect(_x, _y, _width, _height);
+}
+
+/// @function imgui_guizmo_draw_grid(view, proj, grid, size)
+/// @argument {Array<Real>} view
+/// @argument {Array<Real>} proj
+/// @argument {Array<Real>} grid
+/// @argument {Real} size
+/// @return {Undefined}
+function imgui_guizmo_draw_grid(view, proj, grid, size) {
+	return __imgui_guizmo_draw_grid(view, proj, grid, size);
+}
+
+/// @function imgui_guizmo_enable(_enable)
+/// @argument {Bool} _enable
+/// @return {Bool}
+function imgui_guizmo_enable(_enable) {
+	return __imgui_guizmo_enable(_enable);
+}
+
+/// @function imgui_guizmo_set_id(_id)
+/// @argument {Real} _id
+/// @return {Undefined}
+function imgui_guizmo_set_id(_id) {
+	return __imgui_guizmo_set_id(_id);
+}
+
+/// @function imgui_guizmo_allow_axis_flip(_allow)
+/// @argument {Bool} _allow
+/// @return {Bool}
+function imgui_guizmo_allow_axis_flip(_allow) {
+	return __imgui_guizmo_allow_axis_flip(_allow);
+}
+
+/// @function imgui_guizmo_decompose_matrix_to_components(_matrix, _outTranslation, _outRotation, _outScale)
+/// @argument {Array<Real>} _matrix
+/// @argument {Array<Real>} _outTranslation
+/// @argument {Array<Real>} _outRotation
+/// @argument {Array<Real>} _outScale
+/// @return {Undefined}
+function imgui_guizmo_decompose_matrix_to_components(_matrix, _outTranslation, _outRotation, _outScale) {
+	return __imgui_guizmo_decompose_matrix_to_components(_matrix, _outTranslation, _outRotation, _outScale);
+}
+
+/// @function imgui_guizmo_recompose_matrix_from_components(_translation, _rotation, _scale, _outMatrix)
+/// @argument {Array<Real>} _translation
+/// @argument {Array<Real>} _rotation
+/// @argument {Array<Real>} _scale
+/// @argument {Array<Real>} _outMatrix
+/// @return {Undefined}
+function imgui_guizmo_recompose_matrix_from_components(_translation, _rotation, _scale, _outMatrix) {
+	return __imgui_guizmo_recompose_matrix_from_components(_translation, _rotation, _scale, _outMatrix);
 }
 
 /// @function imgui_is_key_down(key, owner_id)

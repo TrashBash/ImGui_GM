@@ -513,6 +513,66 @@ enum ImGuiTextureType {
 	Font = 1 << 2
 }
 
+enum ImGuiTextEditorPalette {
+	Dark,
+	Light,
+	RetroBlue,
+}
+
+enum ImGuiTextEditorPaletteColor {
+	Default,
+	Keyword,
+	Number,
+	String,
+	CharLiteral,
+	Punctuation,
+	Preprocessor,
+	Identifier,
+	KnownIdentifier,
+	PreprocIdentifier,
+	CommentSingleLine,
+	CommentMultiLine,
+	Background,
+	Cursor,
+	Selection,
+	ErrorMarker,
+	Breakpoint,
+	LineNumber,
+	CurrentLineFill,
+	CurrentLineFillInactive,
+}
+
+enum ImGuiTextEditorLanguage {
+	CPlusPlus,
+	HLSL,
+	GLSL,
+	LUA,
+}
+
+enum ImGuizmoOperation {
+	TranslateX = 1 << 0,
+	TranslateY = 1 << 1,
+	TranslateZ = 1 << 2,
+	RotateX = 1 << 3,
+	RotateY = 1 << 4,
+	RotateZ = 1 << 5,
+	RotateScreen = 1 << 6,
+	ScaleX = 1 << 7,
+	ScaleY = 1 << 8,
+	ScaleZ = 1 << 9,
+	Bounds = 1 << 10,
+	Translate = ImGuizmoOperation.TranslateX | ImGuizmoOperation.TranslateY | ImGuizmoOperation.TranslateZ,
+	Rotate = ImGuizmoOperation.RotateX | ImGuizmoOperation.RotateY | ImGuizmoOperation.RotateZ | ImGuizmoOperation.RotateScreen,
+	Scale = ImGuizmoOperation.ScaleX | ImGuizmoOperation.ScaleY | ImGuizmoOperation.ScaleZ,
+	Universal = ImGuizmoOperation.Translate | ImGuizmoOperation.Rotate | ImGuizmoOperation.Scale
+}
+
+enum ImGuizmoMode
+{
+	Local,
+	World
+}
+
 // slightly modified from imgui.h
 enum ImGuiKey
 {

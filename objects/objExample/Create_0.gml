@@ -40,6 +40,10 @@ if ini_filename != "" {
 /// Optional: Set the main state active.
 // imgui_state.Use();
 
+
+// @ TEXT EDITOR EXAMPLE STUFF
+// ----------------------
+
 var _text =
 @'
 function foo() { return bar; }
@@ -57,6 +61,32 @@ LANG		= ["C++", "HLSL", "GLSL", "LUA", "GML"];
 SEL_LANG	= 4;
 PAL			= ["Dark", "Light", "Retro Blue", "GameMaker"];
 SEL_PAL		= 3;
+
+// @ IMGUIZMO EXAMPLE STUFF
+// ----------------------
+mouselock	= false;
+cameraX		= 180;
+cameraY		= 140;
+cameraZ		= 110;
+cameraYaw	= 105;
+cameraPitch	= -25;
+
+surf		= -1;
+gizmowinflags	= 0;
+ops = ImGuizmoOperation.Translate;
+pos = [0, 0, 0.1];
+rot = [0, 0, 0];
+scl = [1, 1, 1];
+cam = camera_create();
+viewportW = 200;
+viewportH = 100;
+viewMatrix = matrix_build_lookat(cameraX, cameraY, cameraZ, cameraX + 0, cameraY + 1, cameraZ + 0, 0, 0, 1);
+projectionMatrix = matrix_build_projection_perspective_fov(70, viewportW / viewportH, 0.1, 3000);
+projectionMatrixGuizmo = matrix_build_projection_perspective_fov(70, viewportW / viewportH, 0.1, 3000);
+mat = matrix_build(pos[0], pos[1], pos[2], 0, 0, 0, 1, 1, 1);
+delta = matrix_build_identity();
+
+
 
 /// -----------------------------------------------------------------------------
 

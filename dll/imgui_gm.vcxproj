@@ -99,6 +99,7 @@
     <ClInclude Include="imgui/imconfig.h" />
     <ClInclude Include="imgui/imgui.h" />
     <ClInclude Include="imgui\imgui_colortextedit.h" />
+    <ClInclude Include="imgui\imgui_guizmo.h" />
     <ClInclude Include="imgui_gm.h" />
     <ClInclude Include="imgui/imgui_impl_dx11.h" />
     <ClInclude Include="imgui/imgui_impl_win32.h" />
@@ -116,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gm\imgui_ext_colortextedit_gm.cpp" />
+    <ClCompile Include="gm\imgui_guizmo_gm.cpp" />
     <ClCompile Include="imgui/imgui.cpp" />
     <ClCompile Include="gm/imgui_api_gm.cpp" />
     <ClCompile Include="gm/imgui_color_gm.cpp" />
@@ -128,6 +130,7 @@
     <ClCompile Include="gm/imgui_ext_memeditor_gm.cpp" />
     <ClCompile Include="gm/imgui_fonts_gm.cpp" />
     <ClCompile Include="imgui\imgui_colortextedit.cpp" />
+    <ClCompile Include="imgui\imgui_guizmo.cpp" />
     <ClCompile Include="imgui_gm.cpp" />
     <ClCompile Include="imgui_impl_gm.cpp" />
     <ClCompile Include="gm/imgui_payload_gm.cpp" />

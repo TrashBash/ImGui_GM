@@ -91,7 +91,7 @@ if (!init) {
 		1st value is the node that was made in the direction of the split (ie: ImGuiDir.Left would yield the left node here)
 		2nd value is the node that was made in the opposing direction of the split (ie: ImGuiDir.Left would yield the right node here)
 	*/
-	var dock1 = ImGui.DockBuilderSplitNode(node_id, ImGuiDir.Left, 0.5);
+	var dock1 = ImGui.DockBuilderSplitNode(node_id, ImGuiDir.Left, 0.2);
 	node_id = dock1[2];
 	dock1 = dock1[0];
 	
@@ -99,74 +99,177 @@ if (!init) {
 	node_id = dock2[2];
 	dock2 = dock2[0];
 	
-	var dock3 = ImGui.DockBuilderSplitNode(dock2, ImGuiDir.Down, 0.5);
+	var dock3 = ImGui.DockBuilderSplitNode(dock2, ImGuiDir.Down, 0.4);
 	dock2 = dock3[2];
 	dock3 = dock3[0];
 	
 	ImGui.DockBuilderDockWindow("ImGui_GM Example", dock1);
 	ImGui.DockBuilderDockWindow("Two", dock2);
 	ImGui.DockBuilderDockWindow("Three", dock3);
+	ImGui.DockBuilderDockWindow("Editor", dock3);
+	ImGui.DockBuilderDockWindow("ImGuizmo", dock2);
 	ImGui.DockBuilderFinish(node_id);
 	init = true;	
 }
 
-ImGui.SetNextWindowSize(400, 300, ImGuiCond.Once);
-ImGui.SetNextWindowPos(500, 100, ImGuiCond.Once);
 ImGui.Begin("Editor");
-if (ImGui.CollapsingHeader("Settings"))
-{
-	editor.SetReadOnly(ImGui.Checkbox("Read Only", editor.IsReadOnly()));
-	editor.SetShowWhitespaces(ImGui.Checkbox("Show Whitespaces", editor.IsShowingWhitespaces()));
-	editor.SetColorizerEnable(ImGui.Checkbox("Colorizer", editor.IsColorizerEnabled()));
-	editor.SetTabSize(ImGui.SliderInt("Tab Size", editor.GetTabSize(), 1, 8));
-	if (ImGui.Button("Select all"))
-		editor.SelectAll();
-		
-	if (ImGui.BeginCombo("Language", LANG[SEL_LANG], 0))
-	{
-		for (var i = 0; i < 5; i++)
-		{
-			if (ImGui.Selectable(LANG[i], SEL_LANG == i))
-			{
-				SEL_LANG = i;
-				editor.SetLanguage(SEL_LANG);
-			}
-		}
-		
-		ImGui.EndCombo();
-	}
 	
-	if (ImGui.BeginCombo("Palette", PAL[SEL_PAL], 0))
-	{
-		for (var i = 0; i < 4; i++)
+	ImGui.BeginChild("##editorsettings", 192);
+		if (ImGui.CollapsingHeader("Settings"))
 		{
-			if (ImGui.Selectable(PAL[i], SEL_PAL == i))
+			editor.SetReadOnly(ImGui.Checkbox("Read Only", editor.IsReadOnly()));
+			editor.SetShowWhitespaces(ImGui.Checkbox("Show Whitespaces", editor.IsShowingWhitespaces()));
+			editor.SetColorizerEnable(ImGui.Checkbox("Colorizer", editor.IsColorizerEnabled()));
+			editor.SetTabSize(ImGui.SliderInt("Tab Size", editor.GetTabSize(), 1, 8));
+			if (ImGui.Button("Select all"))
+				editor.SelectAll();
+		
+			if (ImGui.BeginCombo("Language", LANG[SEL_LANG], 0))
 			{
-				SEL_PAL = i;
-				editor.SetPalette(SEL_PAL);
+				for (var i = 0; i < 5; i++)
+				{
+					if (ImGui.Selectable(LANG[i], SEL_LANG == i))
+					{
+						SEL_LANG = i;
+						editor.SetLanguage(SEL_LANG);
+					}
+				}
+		
+				ImGui.EndCombo();
+			}
+	
+			if (ImGui.BeginCombo("Palette", PAL[SEL_PAL], 0))
+			{
+				for (var i = 0; i < 4; i++)
+				{
+					if (ImGui.Selectable(PAL[i], SEL_PAL == i))
+					{
+						SEL_PAL = i;
+						editor.SetPalette(SEL_PAL);
+					}
+				}
+		
+				ImGui.EndCombo();
 			}
 		}
+	
+		ImGui.Separator();
+	
+		ImGui.BeginChild("##editorcolors", 192, -1);
+		for (var i = 0; i < 14; i++)
+		{
+			ImGui.PushID(i);
+			editor.SetPaletteColor(i, ImGui.ColorEdit3($"###col", editor.GetPaletteColor(i)), 255);
+			ImGui.PopID();
+		}
+		ImGui.EndChild();
+	ImGui.EndChild();
+	
+	ImGui.SameLine();
+	editor.Render();
+	
+ImGui.End();
+
+ImGui.Begin("ImGuizmo", , gizmowinflags);
+
+	gizmowinflags = ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows) ? ImGuiWindowFlags.NoMove : 0;
+	
+	ImGui.GuizmoDecomposeMatrixToComponents(mat, pos, rot, scl);
+	ImGui.InputFloat3("Translation", pos);
+	ImGui.InputFloat3("Rotation", rot);
+	ImGui.InputFloat3("Scale", scl);
+	ImGui.GuizmoRecomposeMatrixFromComponents(pos, rot, scl, mat);
+	
+	if (ImGui.RadioButton("Translate", ops == ImGuizmoOperation.Translate))
+		ops = ImGuizmoOperation.Translate;
 		
-		ImGui.EndCombo();
-	}
-}
-editor.Render();
+	ImGui.SameLine(); if (ImGui.RadioButton("Rotate", ops == ImGuizmoOperation.Rotate))
+		ops = ImGuizmoOperation.Rotate;
+		
+	ImGui.SameLine(); if (ImGui.RadioButton("Scale", ops == ImGuizmoOperation.Scale))
+		ops = ImGuizmoOperation.Scale;
+		
+	ImGui.SameLine(); if (ImGui.RadioButton("Universal", ops == ImGuizmoOperation.Universal))
+		ops = ImGuizmoOperation.Universal;
+	
+	viewportW = ImGui.GetContentRegionAvailX();
+	viewportH = ImGui.GetContentRegionAvailY();
+	
+	ImGui.BeginChild("Viewport", viewportW, viewportH);
+	
+		var rx = ImGui.GetWindowPosX();
+		var ry = ImGui.GetWindowPosY();
+	
+		if (keyboard_check_pressed(vk_control))
+			mouselock = !mouselock;
+	
+		if (mouselock)
+		{
+			var _windowCenterX = window_get_width() / 2;
+			var _windowCenterY = window_get_height() / 2;
+
+			var _mouseDeltaX = window_mouse_get_x() - _windowCenterX;
+			var _mouseDeltaY = window_mouse_get_y() - _windowCenterY;
+
+			cameraYaw	-= 0.05 * _mouseDeltaX;
+			cameraPitch -= 0.05 * _mouseDeltaY;
+			cameraPitch = clamp(cameraPitch, -89, 89);
+
+			window_mouse_set(_windowCenterX, _windowCenterY);
+		}
+	
+		var _cameraForwardX		= dcos(cameraYaw) * dcos(cameraPitch);
+		var _cameraForwardY		= -dsin(cameraYaw) * dcos(cameraPitch);
+		var _cameraForwardZ		= dsin(cameraPitch);
+
+		var _forwardMovement	= keyboard_check(ord("W")) - keyboard_check(ord("S"));
+		var _strafeMovement		= keyboard_check(ord("A")) - keyboard_check(ord("D"));
+		var _verticalMovement	= keyboard_check(vk_space) - keyboard_check(vk_shift);
+
+		var _sinCameraYaw		= dsin(cameraYaw);
+		var _cosCameraYaw		= dcos(cameraYaw);
+
+		cameraX += 2 * (_forwardMovement * _cosCameraYaw - _strafeMovement * _sinCameraYaw);
+		cameraY += 2 * (-_forwardMovement * _sinCameraYaw - _strafeMovement * _cosCameraYaw);
+		cameraZ += 2 * _verticalMovement;
+
+		viewMatrix = matrix_build_lookat(
+			cameraX, cameraY, cameraZ,
+			cameraX + _cameraForwardX, cameraY + _cameraForwardY, cameraZ + _cameraForwardZ,
+			0, 0, 1
+		);
+		
+		projectionMatrix = matrix_build_projection_perspective_fov(
+			-60,
+			-viewportW / viewportH,
+			0.1,
+			3000
+		);
+		
+		// I'm lazy - ImGuizmo needs the non negative
+		projectionMatrixGuizmo = matrix_build_projection_perspective_fov(
+			60,
+			viewportW / viewportH,
+			0.1,
+			3000
+		);
+	
+		ImGui.Surface(surf, c_white, 1, viewportW, viewportH); 
+
+		ImGui.GuizmoSetOrthographic(false);
+		ImGui.GuizmoSetDrawlist();
+		ImGui.GuizmoSetRect(rx, ry, viewportW, viewportH);
+		
+		// Grid, aligned with a different axis configuration by default
+		// ImGui.GuizmoDrawGrid(viewMatrix, projectionMatrixGuizmo, matrix_build_identity(), 16);
+	
+		// Manipulate, this draws the Gizmo and processes all inputs
+		ImGui.GuizmoManipulate(viewMatrix, projectionMatrixGuizmo, ops, 1, mat);
+		
+	ImGui.EndChild();
 ImGui.End();
 
-ImGui.SetNextWindowSize(200, 500, ImGuiCond.Once);
-ImGui.SetNextWindowPos(300, 100, ImGuiCond.Once);
-ImGui.Begin("Editor colors");
 
-	for (var i = 0; i < 14; i++)
-	{
-		ImGui.PushID(i);
-		editor.SetPaletteColor(i, ImGui.ColorEdit3($"###col", editor.GetPaletteColor(i)), 255);
-		ImGui.PopID();
-	}
-
-ImGui.End();
-
-/*
 // Main Window
 if (main_open) {
 	ImGui.SetNextWindowSize(room_width / 2, room_height / 2, ImGuiCond.Once);

@@ -1946,6 +1946,126 @@ function ImGui() constructor {
 		return __imgui_get_font_size();
 	}
 
+	/// @function GuizmoBeginFrame()
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoBeginFrame = function() {
+		return __imgui_guizmo_begin_frame();
+	}
+
+	/// @function GuizmoSetOrthographic(_isOrtho)
+	/// @argument {Bool} _isOrtho
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoSetOrthographic = function(_isOrtho) {
+		return __imgui_guizmo_set_orthographic(_isOrtho);
+	}
+
+	/// @function GuizmoIsUsing()
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoIsUsing = function() {
+		return __imgui_guizmo_is_using();
+	}
+
+	/// @function GuizmoIsOver()
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoIsOver = function() {
+		return __imgui_guizmo_is_over();
+	}
+
+	/// @function GuizmoManipulate(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix, _snap, _localBounds)
+	/// @argument {Array<Real>} _viewMat
+	/// @argument {Array<Real>} _projMat
+	/// @argument {Real} _operation
+	/// @argument {Real} _mode
+	/// @argument {Array<Real>} _mdlMat
+	/// @argument {Array<Real>} [_deltaMatrix=undefined]
+	/// @argument {Array<Real>} [_snap=undefined]
+	/// @argument {Array<Real>} [_localBounds=undefined]
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoManipulate = function(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix=undefined, _snap=undefined, _localBounds=undefined) {
+		return __imgui_guizmo_manipulate(_viewMat, _projMat, _operation, _mode, _mdlMat, _deltaMatrix, _snap, _localBounds);
+	}
+
+	/// @function GuizmoSetDrawlist(_drawlist)
+	/// @argument {Pointer} [_drawlist=undefined]
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoSetDrawlist = function(_drawlist=undefined) {
+		return __imgui_guizmo_set_drawlist(_drawlist);
+	}
+
+	/// @function GuizmoSetRect(_x, _y, _width, _height)
+	/// @argument {Real} _x
+	/// @argument {Real} _y
+	/// @argument {Real} _width
+	/// @argument {Real} _height
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoSetRect = function(_x, _y, _width, _height) {
+		return __imgui_guizmo_set_rect(_x, _y, _width, _height);
+	}
+
+	/// @function GuizmoDrawGrid(view, proj, grid, size)
+	/// @argument {Array<Real>} view
+	/// @argument {Array<Real>} proj
+	/// @argument {Array<Real>} grid
+	/// @argument {Real} size
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoDrawGrid = function(view, proj, grid, size) {
+		return __imgui_guizmo_draw_grid(view, proj, grid, size);
+	}
+
+	/// @function GuizmoEnable(_enable)
+	/// @argument {Bool} _enable
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoEnable = function(_enable) {
+		return __imgui_guizmo_enable(_enable);
+	}
+
+	/// @function GuizmoSetId(_id)
+	/// @argument {Real} _id
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoSetId = function(_id) {
+		return __imgui_guizmo_set_id(_id);
+	}
+
+	/// @function GuizmoAllowAxisFlip(_allow)
+	/// @argument {Bool} _allow
+	/// @context ImGui
+	/// @return {Bool}
+	static GuizmoAllowAxisFlip = function(_allow) {
+		return __imgui_guizmo_allow_axis_flip(_allow);
+	}
+
+	/// @function GuizmoDecomposeMatrixToComponents(_matrix, _outTranslation, _outRotation, _outScale)
+	/// @argument {Array<Real>} _matrix
+	/// @argument {Array<Real>} _outTranslation
+	/// @argument {Array<Real>} _outRotation
+	/// @argument {Array<Real>} _outScale
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoDecomposeMatrixToComponents = function(_matrix, _outTranslation, _outRotation, _outScale) {
+		return __imgui_guizmo_decompose_matrix_to_components(_matrix, _outTranslation, _outRotation, _outScale);
+	}
+
+	/// @function GuizmoRecomposeMatrixFromComponents(_translation, _rotation, _scale, _outMatrix)
+	/// @argument {Array<Real>} _translation
+	/// @argument {Array<Real>} _rotation
+	/// @argument {Array<Real>} _scale
+	/// @argument {Array<Real>} _outMatrix
+	/// @context ImGui
+	/// @return {Undefined}
+	static GuizmoRecomposeMatrixFromComponents = function(_translation, _rotation, _scale, _outMatrix) {
+		return __imgui_guizmo_recompose_matrix_from_components(_translation, _rotation, _scale, _outMatrix);
+	}
+
 	/// @function IsKeyDown(key, owner_id)
 	/// @argument {ImGuiKey} key
 	/// @argument {ImGuiID} [owner_id=undefined]
@@ -4642,42 +4762,6 @@ function ImGui() constructor {
 		Mouse = 0,
 		TouchScreen,
 		Pen,
-	}
-
-	enum ImGuiTextEditorPalette {
-		Dark,
-		Light,
-		RetroBlue,
-	}
-
-	enum ImGuiTextEditorPaletteColor {
-		Default,
-		Keyword,
-		Number,
-		String,
-		CharLiteral,
-		Punctuation,
-		Preprocessor,
-		Identifier,
-		KnownIdentifier,
-		PreprocIdentifier,
-		CommentSingleLine,
-		CommentMultiLine,
-		Background,
-		Cursor,
-		Selection,
-		ErrorMarker,
-		Breakpoint,
-		LineNumber,
-		CurrentLineFill,
-		CurrentLineFillInactive,
-	}
-
-	enum ImGuiTextEditorLanguage {
-		CPlusPlus,
-		HLSL,
-		GLSL,
-		LUA,
 	}
 
 	enum ImGuiCond {
