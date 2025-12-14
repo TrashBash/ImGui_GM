@@ -200,39 +200,46 @@ ImGui.Begin("ImGuizmo", , gizmowinflags);
 		var rx = ImGui.GetWindowPosX();
 		var ry = ImGui.GetWindowPosY();
 	
-		if (keyboard_check_pressed(vk_control))
-			mouselock = !mouselock;
-	
-		if (mouselock)
+		// Quick and dirty fix to not move when mouse not over viewport
+		var _forwardMovement  = 0;
+		var _strafeMovement	  = 0;
+		var _verticalMovement = 0;
+		if (gizmowinflags & ImGuiWindowFlags.NoMove != 0)
 		{
-			var _windowCenterX = window_get_width() / 2;
-			var _windowCenterY = window_get_height() / 2;
-
-			var _mouseDeltaX = window_mouse_get_x() - _windowCenterX;
-			var _mouseDeltaY = window_mouse_get_y() - _windowCenterY;
-
-			cameraYaw	-= 0.05 * _mouseDeltaX;
-			cameraPitch -= 0.05 * _mouseDeltaY;
-			cameraPitch = clamp(cameraPitch, -89, 89);
-
-			window_mouse_set(_windowCenterX, _windowCenterY);
-		}
+			if (keyboard_check_pressed(vk_control))
+				mouselock = !mouselock;
 	
-		var _cameraForwardX		= dcos(cameraYaw) * dcos(cameraPitch);
-		var _cameraForwardY		= -dsin(cameraYaw) * dcos(cameraPitch);
-		var _cameraForwardZ		= dsin(cameraPitch);
+			if (mouselock)
+			{
+				var _windowCenterX = rx + viewportW / 2;
+				var _windowCenterY = ry + viewportH / 2;
 
-		var _forwardMovement	= keyboard_check(ord("W")) - keyboard_check(ord("S"));
-		var _strafeMovement		= keyboard_check(ord("A")) - keyboard_check(ord("D"));
-		var _verticalMovement	= keyboard_check(vk_space) - keyboard_check(vk_shift);
+				var _mouseDeltaX = window_mouse_get_x() - _windowCenterX;
+				var _mouseDeltaY = window_mouse_get_y() - _windowCenterY;
 
-		var _sinCameraYaw		= dsin(cameraYaw);
-		var _cosCameraYaw		= dcos(cameraYaw);
+				cameraYaw	-= 0.05 * _mouseDeltaX;
+				cameraPitch -= 0.05 * _mouseDeltaY;
+				cameraPitch = clamp(cameraPitch, -89, 89);
 
+				window_mouse_set(_windowCenterX, _windowCenterY);
+			}
+		
+			_forwardMovement	= keyboard_check(ord("W")) - keyboard_check(ord("S"));
+			_strafeMovement		= keyboard_check(ord("A")) - keyboard_check(ord("D"));
+			_verticalMovement	= keyboard_check(vk_space) - keyboard_check(vk_shift);
+		}
+
+		var _cameraForwardX	= dcos(cameraYaw) * dcos(cameraPitch);
+		var _cameraForwardY	= -dsin(cameraYaw) * dcos(cameraPitch);
+		var _cameraForwardZ	= dsin(cameraPitch);
+			
+		var _sinCameraYaw	= dsin(cameraYaw);
+		var _cosCameraYaw	= dcos(cameraYaw);
+			
 		cameraX += 2 * (_forwardMovement * _cosCameraYaw - _strafeMovement * _sinCameraYaw);
 		cameraY += 2 * (-_forwardMovement * _sinCameraYaw - _strafeMovement * _cosCameraYaw);
 		cameraZ += 2 * _verticalMovement;
-
+			
 		viewMatrix = matrix_build_lookat(
 			cameraX, cameraY, cameraZ,
 			cameraX + _cameraForwardX, cameraY + _cameraForwardY, cameraZ + _cameraForwardZ,
