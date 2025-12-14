@@ -522,6 +522,7 @@ enum ImGuiTextEditorPalette {
 	Dark,
 	Light,
 	RetroBlue,
+	GameMaker
 }
 
 enum ImGuiTextEditorPaletteColor {
@@ -552,6 +553,7 @@ enum ImGuiTextEditorLanguage {
 	HLSL,
 	GLSL,
 	LUA,
+	GML
 }
 
 enum ImGuizmoOperation {
