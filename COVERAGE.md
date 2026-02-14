@@ -521,6 +521,8 @@ Below is a table of non-standard functions made specifically for ImGui_GM
 | `ImGui.TextEditorRemovePreprocIdentifier(_handle, _identifier)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L815) |
 | `ImGui.TextEditorClearPreprocIdentifiers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L832) |
 | `ImGui.TextEditorAddConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L847) |
+| `ImGui.TextEditorRemoveConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L921) |
+| `ImGui.TextEditorClearConstants(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L1006) |
 | `ImGui.MemoryEditorShowWindow(title, buffer, offset, size)` | [imgui_ext_memeditor_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_memeditor_gm.cpp#L5) |
 | `ImGui.MemoryEditorDrawContents(buffer, offset, size)` | [imgui_ext_memeditor_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_memeditor_gm.cpp#L18) |
 | `ImGui.AddFontFromFile(file, size)` | [imgui_fonts_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_fonts_gm.cpp#L25) |

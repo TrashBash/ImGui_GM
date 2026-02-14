@@ -218,6 +218,9 @@ ImGui.Begin("Editor");
 		// Custom syntax
 		if (ImGui.CollapsingHeader("Custom Syntax"))
 		{
+			ImGui.TextColored("WARNING:", c_red);
+			ImGui.TextWrapped("Clearing any custom data removes ALL custom data as well as built-in! Re-add by setting Language to GML.");
+			
 			// Keyword
 			ImGui.TextDisabled("KEYWORD:");
 			ImGui.Text("current_selection");
@@ -227,6 +230,15 @@ ImGui.Begin("Editor");
 				editor.SetText(editor.GetText() + "\ncurrent_selection");
 			}
 			
+			if (ImGui.Button("Remove Keyword", 220))
+				editor.RemoveKeyword("current_selection");
+			
+			if (ImGui.Button("Clear Keywords", 220))
+			{
+				editor.ClearKeywords();
+				editor.SetLanguage(4);  // Re-add
+			}
+			
 			// Function
 			ImGui.TextDisabled("FUNCTION:");
 			ImGui.Text("my_example_func");
@@ -234,6 +246,15 @@ ImGui.Begin("Editor");
 			{
 				editor.AddIdentifier("my_example_func", "my_example_func(x, y)\nCustom function");
 				editor.SetText(editor.GetText() + "\nmy_example_func(x, y);");
+			}
+			
+			if (ImGui.Button("Remove Identifier", 220))
+				editor.RemoveIdentifier("my_example_func");
+			
+			if (ImGui.Button("Clear Identifiers", 220))
+			{
+				editor.ClearIdentifiers();
+				editor.SetLanguage(4);  // Re-add
 			}
 
 			// Variable
@@ -245,6 +266,15 @@ ImGui.Begin("Editor");
 				editor.SetText(editor.GetText() + "\nplayer_hp = 100;");
 			}
 			
+			if (ImGui.Button("Remove Variable", 220))
+				editor.RemovePreprocIdentifier("player_hp");
+			
+			if (ImGui.Button("Clear Variables", 220))
+			{
+				editor.ClearPreprocIdentifiers();
+				editor.SetLanguage(4);  // Re-add
+			}
+			
 			// Constant
 			ImGui.TextDisabled("CONSTANT(s):");
 			ImGui.Text("MAX_HP, MIN_HP");
@@ -253,6 +283,9 @@ ImGui.Begin("Editor");
 				editor.AddConstant("MAX_HP|MIN_HP");
 				editor.SetText(editor.GetText() + "\nif (hp > MAX_HP) { }\nelse if (hp < MIN_HP) { }");
 			}
+			
+			if (ImGui.Button("Remove 'MAX_HP' and 'MIN_HP'", 220))
+				editor.RemoveConstant("MAX_HP|MIN_HP");
 
 			// Constant Pattern
 			ImGui.TextDisabled("PATTERN:");
@@ -261,6 +294,15 @@ ImGui.Begin("Editor");
 			{
 				editor.AddConstant("ENEMY_[A-Z_]+");
 				editor.SetText(editor.GetText() + "\nENEMY_GOBLIN = 0;\nENEMY_ORC = 1;");
+			}
+			
+			if (ImGui.Button("Remove Pattern", 220))
+				editor.RemoveConstant("ENEMY_[A-Z_]+");
+				
+			if (ImGui.Button("Clear Constants", 220))
+			{
+				editor.ClearConstants();
+				editor.SetLanguage(4);  // Re-add GML constants
 			}
 		}
 	

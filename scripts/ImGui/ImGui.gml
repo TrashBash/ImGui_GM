@@ -2052,9 +2052,26 @@ function ImGui() constructor {
 	/// @argument {Real} _handle
 	/// @argument {String} _constant
 	/// @context ImGui
-	/// @return {Unknown<unset>}
+	/// @return {Bool}
 	static TextEditorAddConstant = function(_handle, _constant) {
 		return __imgui_text_editor_add_constant(_handle, _constant);
+	}
+
+	/// @function TextEditorRemoveConstant(_handle, _constant)
+	/// @argument {Real} _handle
+	/// @argument {String} _constant
+	/// @context ImGui
+	/// @return {Bool}
+	static TextEditorRemoveConstant = function(_handle, _constant) {
+		return __imgui_text_editor_remove_constant(_handle, _constant);
+	}
+
+	/// @function TextEditorClearConstants(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearConstants = function(_handle) {
+		return __imgui_text_editor_clear_constants(_handle);
 	}
 
 	/// @function MemoryEditorShowWindow(title, buffer, offset, size)

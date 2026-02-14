@@ -851,48 +851,181 @@ GMFUNC(__imgui_text_editor_add_constant)
 
 	CHECK_EDITOR_BOOL;
 
-	if (!_constant)
-		__return_bool(Result, false);
+	if (!_constant || strlen(_constant) == 0)
+	{
+		Result.kind = VALUE_BOOL;
+		Result.val	= false;
+		return;
+	}
 
 	auto _langDef = _editor->GetLanguageDefinition();
 
-	// Find existing Preprocessor pattern
+	const std::string _toAdd(_constant);
+	const std::string _insertion = "|" + _toAdd;
+
 	for (auto& pattern_pair : _langDef.mTokenRegexStrings)
 	{
-		if (pattern_pair.second == TextEditor::PaletteIndex::Preprocessor)
+		if (pattern_pair.second != TextEditor::PaletteIndex::Preprocessor)
+			continue;
+
+		std::string& pattern = pattern_pair.first;
+
+		// Already exists?
+		if (pattern.find(_toAdd) != std::string::npos)
 		{
-			std::string& pattern = pattern_pair.first;
-
-			// Find last ")\\b" and insert before it
-			size_t _pos = pattern.rfind(")\\b");
-			if (_pos != std::string::npos)
-			{
-				std::string _insertion	= "|";
-				_insertion				+= _constant;
-
-				pattern.insert(_pos, _insertion);
-
-				_editor->SetLanguageDefinition(_langDef);
-				__return_bool(Result, true);
-			}
+			Result.kind = VALUE_BOOL;
+			Result.val = true;
+			return;
 		}
+
+		// insert before ")\\b"
+		size_t _pos = pattern.rfind(")\\b");
+		if (_pos != std::string::npos)
+		{
+			pattern.insert(_pos, _insertion);
+			_editor->SetLanguageDefinition(_langDef);
+			Result.kind = VALUE_BOOL;
+			Result.val	= true;
+			return;
+		}
+
+		// insert before final "\\b"
+		_pos = pattern.rfind("\\b");
+		if (_pos > 2)
+		{
+			pattern.insert(_pos, _insertion);
+			_editor->SetLanguageDefinition(_langDef);
+			Result.kind = VALUE_BOOL;
+			Result.val	= true;
+			return;
+		}
+
+		// First pattern has unexpected structure - bail out
+		Result.kind = VALUE_BOOL;
+		Result.val	= false;
+		return;
 	}
 
-	// Create new pattern if not found
-	std::string _pattern	= "\\b";
-	_pattern				+= _constant;
-	_pattern				+= "\\b";
-
-	_langDef.mTokenRegexStrings.insert
+	// No pattern exists - create new
+	_langDef.mTokenRegexStrings.emplace_back
 	(
-		_langDef.mTokenRegexStrings.begin(),
-		std::make_pair<std::string, TextEditor::PaletteIndex>
-		(
-			std::move(_pattern),
-			TextEditor::PaletteIndex::Preprocessor
-		)
+		"\\b" + _toAdd + "\\b",
+		TextEditor::PaletteIndex::Preprocessor
 	);
 
 	_editor->SetLanguageDefinition(_langDef);
+	Result.kind = VALUE_BOOL;
+	Result.val	= true;
+}
+
+GMFUNC(__imgui_text_editor_remove_constant)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _constant	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_constant || strlen(_constant) == 0)
+	{
+		Result.kind = VALUE_BOOL;
+		Result.val	= false;
+		return;
+	}
+
+	auto _langDef = _editor->GetLanguageDefinition();
+
+	// Build all search strings
+	const std::string _toRemove(_constant);
+	const std::string _fullPattern		= "\\b" + _toRemove + "\\b";
+	const std::string _endGML			= "|"	+ _toRemove + ")\\b";
+	const std::string _endStandalone	= "|"	+ _toRemove + "\\b";
+	const std::string _middle			= "|"	+ _toRemove + "|";
+	const std::string _start			= "\\b" + _toRemove + "|";
+
+	bool _anyFound = false;
+
+	for (int i = (int)_langDef.mTokenRegexStrings.size() - 1; i >= 0; i--)
+	{
+		if (_langDef.mTokenRegexStrings[i].second != TextEditor::PaletteIndex::Preprocessor)
+			continue;
+
+		std::string& _pattern = _langDef.mTokenRegexStrings[i].first;
+
+		// At end before )\b (GML pattern with custom constants)
+		size_t _pos = _pattern.find(_endGML);
+		if (_pos != std::string::npos)
+		{
+			_pattern.erase(_pos, _toRemove.length() + 1);
+			_anyFound = true;
+			continue;
+		}
+
+		// Entire pattern match
+		if (_pattern == _fullPattern)
+		{
+			_langDef.mTokenRegexStrings.erase(_langDef.mTokenRegexStrings.begin() + i);
+			_anyFound = true;
+			continue;
+		}
+
+		// At end of standalone pattern
+		_pos = _pattern.find(_endStandalone);
+		if (_pos != std::string::npos)
+		{
+			_pattern.erase(_pos, _toRemove.length() + 1);
+			_anyFound = true;
+			continue;
+		}
+
+		// In middle
+		_pos = _pattern.find(_middle);
+		if (_pos != std::string::npos)
+		{
+			_pattern.erase(_pos, _toRemove.length() + 1);
+			_anyFound = true;
+			continue;
+		}
+
+		// At start
+		if (_pattern.find(_start) == 0)
+		{
+			_pattern.erase(2, _toRemove.length() + 1);
+			_anyFound = true;
+			continue;
+		}
+	}
+
+	if (_anyFound)
+		_editor->SetLanguageDefinition(_langDef);
+
+	Result.kind = VALUE_BOOL;
+	Result.val	= _anyFound;
+}
+
+
+GMFUNC(__imgui_text_editor_clear_constants)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _langDef = _editor->GetLanguageDefinition();
+
+	// This clears both built-in and custom constants
+	_langDef.mTokenRegexStrings.erase
+	(
+		std::remove_if
+		(
+			_langDef.mTokenRegexStrings.begin(),
+			_langDef.mTokenRegexStrings.end(),
+			[](const std::pair<std::string, TextEditor::PaletteIndex>& pair) {
+				return pair.second == TextEditor::PaletteIndex::Preprocessor;
+			}
+		),
+		_langDef.mTokenRegexStrings.end()
+	);
+
+	_editor->SetLanguageDefinition(_langDef);
+
 	__return_bool(Result, true);
 }

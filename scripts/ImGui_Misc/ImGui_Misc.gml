@@ -625,6 +625,18 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 		__imgui_text_editor_add_constant(handle, constant);
 		return self;
 	}
+	
+	static RemoveConstant = function(constant)
+	{
+		__imgui_text_editor_remove_constant(handle, constant);
+		return self;
+	}
+
+	static ClearConstants = function()
+	{
+		__imgui_text_editor_clear_constants(handle);
+		return self;
+	}
 }
 
 
