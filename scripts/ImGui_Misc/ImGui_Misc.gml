@@ -309,12 +309,14 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static SetText = function(text)
 	{
-		return __imgui_text_editor_set_text(handle, text);
+		__imgui_text_editor_set_text(handle, text);
+		return self;
 	}
 	
 	static InsertText = function(text)
 	{
-		return __imgui_text_editor_insert_text(handle, text);
+		__imgui_text_editor_insert_text(handle, text);
+		return self;
 	}
 	
 	// @ STATE / READONLY
@@ -331,7 +333,8 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static SetReadOnly = function(enable)
 	{
-		return __imgui_text_editor_set_read_only(handle, enable);
+		__imgui_text_editor_set_read_only(handle, enable);
+		return self;
 	}
 	
 	// @ CURSOR / POSITION
@@ -353,7 +356,8 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static SetCursorPosition = function(line, column)
 	{
-		return __imgui_text_editor_set_cursor_pos_line_column(handle, line, column);
+		__imgui_text_editor_set_cursor_pos_line_column(handle, line, column);
+		return self;
 	}
 	
 	// @ SELECTION
@@ -370,12 +374,20 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static SelectAll = function()
 	{
-		return __imgui_text_editor_select_all(handle);
+		__imgui_text_editor_select_all(handle);
+		return self;
 	}
 	
 	static SelectLine = function(line)
 	{
-		return __imgui_text_editor_select_line(handle, line);
+		__imgui_text_editor_select_line(handle, line);
+		return self;
+	}
+	
+	static SelectWordUnderCursor = function()
+	{
+		__imgui_text_editor_select_word_under_cursor(handle);
+		return self;
 	}
 	
 	// @ UNDO / REDO
@@ -392,12 +404,14 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static Undo = function()
 	{
-		return __imgui_text_editor_undo(handle);
+		__imgui_text_editor_undo(handle);
+		return self;
 	}
 	
 	static Redo = function()
 	{
-		return __imgui_text_editor_redo(handle);
+		__imgui_text_editor_redo(handle);
+		return self;
 	}
 	
 	// @ CLIPBOARD / EDIT
@@ -409,49 +423,62 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static Copy = function()
 	{
-		return __imgui_text_editor_copy(handle);
+		__imgui_text_editor_copy(handle);
+		return self;
 	}
 	
 	static Paste = function()
 	{
-		return __imgui_text_editor_paste(handle);
+		__imgui_text_editor_paste(handle);
+		return self;
 	}
 	
 	static Cut = function()
 	{
-		return __imgui_text_editor_cut(handle);
+		__imgui_text_editor_cut(handle);
+		return self;
 	}
 	
 	static Delete = function()
 	{
-		return __imgui_text_editor_delete(handle);
+		__imgui_text_editor_delete(handle);
+		return self;
 	}
 	
 	// @ LANGUAGE / VISUALS
 	
 	static SetLanguage = function(languageID)
 	{
-		return __imgui_text_editor_set_language(handle, languageID);
+		__imgui_text_editor_set_language(handle, languageID);
+		return self;
 	}
 	
 	static SetPalette = function(paletteID)
 	{
-		return __imgui_text_editor_set_palette(handle, paletteID);
+		__imgui_text_editor_set_palette(handle, paletteID);
+		return self;
 	}
 
 	static GetPaletteColor = function(index)
 	{
 		return __imgui_text_editor_get_palette_color(handle, index);
 	}
+	
+	static GetPaletteAlpha = function(index)
+	{
+		return __imgui_text_editor_get_palette_alpha(handle, index);
+	}
 
 	static SetPaletteColor = function(index, color, a = 255)
 	{
-		return __imgui_text_editor_set_palette_color(handle, index, color, a);
+		__imgui_text_editor_set_palette_color(handle, index, color, a);
+		return self;
 	}
 	
 	static SetTabSize = function(size)
 	{
-		return __imgui_text_editor_set_tab_size(handle, size);
+		__imgui_text_editor_set_tab_size(handle, size);
+		return self;
 	}
 	
 	static GetTabSize = function()
@@ -461,7 +488,8 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 
 	static SetShowWhitespaces = function(enable)
 	{
-		return __imgui_text_editor_set_show_whitespaces(handle, enable);
+		__imgui_text_editor_set_show_whitespaces(handle, enable);
+		return self;
 	}
 
 	static IsShowingWhitespaces = function()
@@ -471,12 +499,131 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 	
 	static SetColorizerEnable = function(enable)
 	{
-		return __imgui_text_editor_set_colorizer_enable(handle, enable);
+		__imgui_text_editor_set_colorizer_enable(handle, enable);
+		return self;
 	}
 
 	static IsColorizerEnabled = function()
 	{
 		return __imgui_text_editor_is_colorizer_enabled(handle);
+	}
+	
+	// @ ERROR MARKERS
+	
+	static SetErrorMarker = function(line, mssg)
+	{
+		__imgui_text_editor_set_error_marker(handle, line, mssg);
+		return self;
+	}
+	
+	static RemoveErrorMarker = function(line)
+	{
+		__imgui_text_editor_remove_error_marker(handle, line);
+		return self;
+	}
+	
+	static ClearErrorMarkers = function()
+	{
+		__imgui_text_editor_clear_error_markers(handle);
+		return self;
+	}
+	
+	static GetErrorMarker = function(line)
+	{
+		return __imgui_text_editor_get_error_marker(handle, line);
+	}
+	
+	// @ BREAKPOINTS
+	
+	static SetBreakpoint = function(line)
+	{
+		__imgui_text_editor_set_breakpoint(handle, line);
+		return self;
+	}
+	
+	static RemoveBreakpoint = function(line)
+	{
+		__imgui_text_editor_remove_breakpoint(handle, line);
+		return self;
+	}
+	
+	static ClearBreakpoints = function()
+	{
+		__imgui_text_editor_clear_breakpoints(handle);
+		return self;
+	}
+	
+	static HasBreakpoint = function(line)
+	{
+		return __imgui_text_editor_has_breakpoint(handle, line);
+	}
+	
+	// @ LANGUAGE DEFINITION - KEYWORDS
+	
+	static AddKeyword = function(keyword)
+	{
+		__imgui_text_editor_add_keyword(handle, keyword);
+		return self;
+	}
+	
+	static RemoveKeyword = function(keyword)
+	{
+		__imgui_text_editor_remove_keyword(handle, keyword);
+		return self;
+	}
+	
+	static ClearKeywords = function()
+	{
+		__imgui_text_editor_clear_keywords(handle);
+		return self;
+	}
+	
+	// @ LANGUAGE DEFINITION - IDENTIFIERS (+ TOOLTIPS)
+	
+	static AddIdentifier = function(identifier, declaration = "")
+	{
+		__imgui_text_editor_add_identifier(handle, identifier, declaration);
+		return self;
+	}
+	
+	static RemoveIdentifier = function(identifier)
+	{
+		__imgui_text_editor_remove_identifier(handle, identifier);
+		return self;
+	}
+	
+	static ClearIdentifiers = function()
+	{
+		__imgui_text_editor_clear_identifiers(handle);
+		return self;
+	}
+	
+	// @ LANGUAGE DEFINITION - PREPROCESSOR IDENTIFIERS (CONSTANTS/VARIABLES)
+	
+	static AddPreprocIdentifier = function(identifier, declaration = "")
+	{
+		__imgui_text_editor_add_preproc_identifier(handle, identifier, declaration);
+		return self;
+	}
+	
+	static RemovePreprocIdentifier = function(identifier)
+	{
+		__imgui_text_editor_remove_preproc_identifier(handle, identifier);
+		return self;
+	}
+	
+	static ClearPreprocIdentifiers = function()
+	{
+		__imgui_text_editor_clear_preproc_identifiers(handle);
+		return self;
+	}
+	
+	// @ LANGUAGE DEFINITION - CONSTANTS
+	
+	static AddConstant = function(constant)
+	{
+		__imgui_text_editor_add_constant(handle, constant);
+		return self;
 	}
 }
 
@@ -546,6 +693,7 @@ enum ImGuiTextEditorPaletteColor {
 	LineNumber,
 	CurrentLineFill,
 	CurrentLineFillInactive,
+	CurrentLineEdge
 }
 
 enum ImGuiTextEditorLanguage {

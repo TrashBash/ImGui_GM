@@ -701,7 +701,7 @@ void TextEditor::HandleKeyboardInputs()
 	auto ctrl = io.ConfigMacOSXBehaviors ? io.KeySuper : io.KeyCtrl;
 	auto alt = io.ConfigMacOSXBehaviors ? io.KeyCtrl : io.KeyAlt;
 
-	if (ImGui::IsWindowFocused())
+	if (ImGui::IsWindowFocused() && !io.AppFocusLost)
 	{
 		if (ImGui::IsWindowHovered())
 			ImGui::SetMouseCursor(ImGuiMouseCursor_TextInput);
@@ -738,8 +738,12 @@ void TextEditor::HandleKeyboardInputs()
 			MoveEnd(shift);
 		else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_Delete))
 			Delete();
-		else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_Backspace))
+		else if (!IsReadOnly() && !ctrl && !alt && ImGui::IsKeyPressed(ImGuiKey_Backspace))
 			Backspace();
+		else if (!IsReadOnly() && ctrl && !alt && ImGui::IsKeyPressed(ImGuiKey_Backspace))
+		{
+			// delete word 
+		}
 		else if (!ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_Insert))
 			mOverwrite ^= true;
 		else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_Insert))
@@ -766,8 +770,8 @@ void TextEditor::HandleKeyboardInputs()
 			for (int i = 0; i < io.InputQueueCharacters.Size; i++)
 			{
 				auto c = io.InputQueueCharacters[i];
-				if (c != 0 && (c == '\n' || c >= 32))
-					EnterCharacter(c, shift);
+				if (c != 0 && c != 0x7F && (c == '\n' || c >= 32))
+                    EnterCharacter(c, shift);
 			}
 			io.InputQueueCharacters.resize(0);
 		}
@@ -1126,7 +1130,7 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]));
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
 	if (!mIgnoreImGuiChild)
-		ImGui::BeginChild(aTitle, aSize, aBorder, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoMove);
+		ImGui::BeginChild(aTitle, aSize, aBorder, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavInputs);
 
 	if (mHandleKeyboardInputs)
 	{
@@ -3192,179 +3196,819 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::GML()
 	static LanguageDefinition langDef;
 	if (!inited)
 	{
+		// Keywords
+
 		static const char* const keywords[] = {
-			"if","else","switch","case","default","break","continue","return",
-			"for","while","do","repeat","with",
-			"function","constructor","static","enum",
-			"var","globalvar","new","delete",
-			"try","catch"
+			"if", "else", "switch", "case", "default", "break", "continue", "return",
+			"for", "while", "do", "repeat", "with", "until", "exit",
+
+			"function", "constructor", "static", "enum",
+			"var", "globalvar", "new", "delete",
+
+			"try", "catch", "throw", "finally",
+
+			"begin", "end", "then", "and", "or", "xor", "not", "div", "mod",
+
+			"macro", "region", "endregion"
 		};
-		for (auto& k : keywords) langDef.mKeywords.insert(k);
+		for (auto& k : keywords)
+			langDef.mKeywords.insert(k);
 
+		// Built-in functions
 
-		// Keywords array doesn't seem to work so lets do this instead
+		static const char* const identifiers[] = {
+			// Arrays
+			"array_length", "array_create", "array_copy", "array_equals", "array_sort",
+			"array_push", "array_pop", "array_insert", "array_delete", "array_resize",
+			"array_get", "array_set", "array_get_index", "array_first", "array_last",
+			"array_contains", "array_find_index", "array_reverse", "array_shuffle",
+			"array_concat", "array_union", "array_intersection", "array_unique",
+			"array_map", "array_reduce", "array_filter", "array_foreach",
+
+			// Strings
+			"string", "string_format", "string_length", "string_byte_length", "string_pos",
+			"string_pos_ext", "string_last_pos", "string_last_pos_ext",
+			"string_copy", "string_char_at", "string_ord_at", "string_byte_at",
+			"string_set_byte_at", "string_delete", "string_insert",
+			"string_lower", "string_upper", "string_letters", "string_digits",
+			"string_lettersdigits", "string_replace", "string_replace_all",
+			"string_count", "string_hash_to_newline", "string_trim", "string_trim_start",
+			"string_trim_end", "string_repeat", "string_split", "string_join",
+			"string_starts_with", "string_ends_with", "string_ext",
+			"string_width", "string_width_ext", "string_height", "string_height_ext",
+			"ansi_char", "chr", "ord", "string_decimal",
+
+			// Maths
+			"abs", "sign", "round", "floor", "ceil", "frac", "sqrt", "sqr",
+			"exp", "ln", "log2", "log10", "power", "logn",
+			"min", "max", "mean", "median", "clamp", "lerp", "smoothstep",
+			"sin", "cos", "tan", "arcsin", "arccos", "arctan", "arctan2",
+			"dsin", "dcos", "dtan", "darcsin", "darccos", "darctan", "darctan2",
+			"degtorad", "radtodeg",
+			"point_distance", "point_distance_3d", "point_direction",
+			"lengthdir_x", "lengthdir_y",
+			"dot_product", "dot_product_3d", "dot_product_normalised", "dot_product_normalised_3d",
+			"angle_difference", "math_set_epsilon", "math_get_epsilon",
+
+			// Random
+			"random", "random_range", "irandom", "irandom_range",
+			"random_set_seed", "random_get_seed", "randomize", "randomise",
+			"choose",
+
+			// DS Lists
+			"ds_list_create", "ds_list_destroy", "ds_list_clear", "ds_list_empty",
+			"ds_list_size", "ds_list_add", "ds_list_insert", "ds_list_replace",
+			"ds_list_delete", "ds_list_find_index", "ds_list_find_value",
+			"ds_list_sort", "ds_list_shuffle", "ds_list_read", "ds_list_write",
+			"ds_list_mark_as_list", "ds_list_mark_as_map", "ds_list_is_list", "ds_list_is_map",
+			"ds_list_copy", "ds_list_set",
+
+			// DS Maps
+			"ds_map_create", "ds_map_destroy", "ds_map_clear", "ds_map_empty",
+			"ds_map_size", "ds_map_add", "ds_map_replace", "ds_map_delete",
+			"ds_map_exists", "ds_map_find_value", "ds_map_find_previous",
+			"ds_map_find_next", "ds_map_find_first", "ds_map_find_last",
+			"ds_map_read", "ds_map_write", "ds_map_copy", "ds_map_set",
+			"ds_map_add_list", "ds_map_add_map", "ds_map_replace_list", "ds_map_replace_map",
+			"ds_map_is_list", "ds_map_is_map", "ds_map_secure_save", "ds_map_secure_load",
+			"ds_map_secure_save_buffer", "ds_map_secure_load_buffer",
+
+			// DS Grids
+			"ds_grid_create", "ds_grid_destroy", "ds_grid_clear", "ds_grid_copy",
+			"ds_grid_resize", "ds_grid_width", "ds_grid_height",
+			"ds_grid_get", "ds_grid_set", "ds_grid_add", "ds_grid_multiply",
+			"ds_grid_set_region", "ds_grid_add_region", "ds_grid_multiply_region",
+			"ds_grid_set_disk", "ds_grid_add_disk", "ds_grid_multiply_disk",
+			"ds_grid_set_grid_region", "ds_grid_add_grid_region", "ds_grid_multiply_grid_region",
+			"ds_grid_get_sum", "ds_grid_get_max", "ds_grid_get_min", "ds_grid_get_mean",
+			"ds_grid_get_disk_sum", "ds_grid_get_disk_min", "ds_grid_get_disk_max", "ds_grid_get_disk_mean",
+			"ds_grid_value_exists", "ds_grid_value_x", "ds_grid_value_y",
+			"ds_grid_value_disk_exists", "ds_grid_value_disk_x", "ds_grid_value_disk_y",
+			"ds_grid_shuffle", "ds_grid_write", "ds_grid_read", "ds_grid_sort",
+
+			// DS Stacks
+			"ds_stack_create", "ds_stack_destroy", "ds_stack_clear", "ds_stack_empty",
+			"ds_stack_size", "ds_stack_push", "ds_stack_pop", "ds_stack_top",
+			"ds_stack_write", "ds_stack_read", "ds_stack_copy",
+
+			// DS Queues
+			"ds_queue_create", "ds_queue_destroy", "ds_queue_clear", "ds_queue_empty",
+			"ds_queue_size", "ds_queue_enqueue", "ds_queue_dequeue", "ds_queue_head", "ds_queue_tail",
+			"ds_queue_write", "ds_queue_read", "ds_queue_copy",
+
+			// DS Priority Queues
+			"ds_priority_create", "ds_priority_destroy", "ds_priority_clear", "ds_priority_empty",
+			"ds_priority_size", "ds_priority_add", "ds_priority_change_priority",
+			"ds_priority_find_priority", "ds_priority_delete_value", "ds_priority_delete_min",
+			"ds_priority_find_min", "ds_priority_delete_max", "ds_priority_find_max",
+			"ds_priority_write", "ds_priority_read", "ds_priority_copy",
+
+			// Instances
+			"instance_create_layer", "instance_create_depth", "instance_destroy",
+			"instance_exists", "instance_find", "instance_number", "instance_position",
+			"instance_nearest", "instance_furthest", "instance_place",
+			"instance_activate_all", "instance_deactivate_all", "instance_activate_object",
+			"instance_deactivate_object", "instance_activate_region", "instance_deactivate_region",
+			"instance_change", "instance_copy", "instance_id_get",
+
+			// Objects
+			"object_exists", "object_get_name", "object_get_depth", "object_get_parent",
+			"object_get_mask", "object_get_persistent", "object_get_physics",
+			"object_get_solid", "object_get_sprite", "object_get_visible",
+			"object_is_ancestor", "object_set_depth", "object_set_mask",
+			"object_set_persistent", "object_set_solid", "object_set_sprite", "object_set_visible",
+			"object_add", "object_delete",
+
+			// Sprites
+			"sprite_exists", "sprite_get_name", "sprite_get_number", "sprite_get_width", "sprite_get_height",
+			"sprite_get_xoffset", "sprite_get_yoffset", "sprite_get_bbox_left", "sprite_get_bbox_right",
+			"sprite_get_bbox_top", "sprite_get_bbox_bottom", "sprite_get_bbox_mode",
+			"sprite_get_texture", "sprite_get_uvs", "sprite_set_offset", "sprite_set_cache_size",
+			"sprite_set_cache_size_ext", "sprite_get_tpe", "sprite_prefetch", "sprite_prefetch_multi",
+			"sprite_flush", "sprite_flush_multi", "sprite_set_speed",
+			"sprite_add", "sprite_replace", "sprite_duplicate", "sprite_assign", "sprite_merge",
+			"sprite_create_from_surface", "sprite_add_from_surface", "sprite_delete",
+			"sprite_set_alpha_from_sprite", "sprite_collision_mask",
+			"sprite_nineslice_create", "sprite_get_nineslice",
+
+			// Fonts
+			"font_add", "font_add_sprite", "font_add_sprite_ext", "font_replace",
+			"font_replace_sprite", "font_replace_sprite_ext", "font_delete",
+			"font_exists", "font_get_name", "font_get_fontname", "font_get_bold",
+			"font_get_italic", "font_get_first", "font_get_last", "font_get_size",
+			"font_set_cache_size", "font_get_texture", "font_get_uvs",
+			"font_get_info", "font_enable_sdf", "font_sdf_spread",
+
+			// Drawing
+			"draw_self", "draw_sprite", "draw_sprite_ext", "draw_sprite_stretched",
+			"draw_sprite_stretched_ext", "draw_sprite_pos", "draw_sprite_general",
+			"draw_sprite_part", "draw_sprite_part_ext", "draw_sprite_tiled", "draw_sprite_tiled_ext",
+			"draw_text", "draw_text_ext", "draw_text_transformed", "draw_text_transformed_colour",
+			"draw_text_colour", "draw_text_ext_colour", "draw_text_ext_transformed",
+			"draw_text_ext_transformed_colour", "draw_text_color", "draw_text_ext_color",
+			"draw_text_transformed_color", "draw_text_ext_transformed_color",
+			"draw_point", "draw_line", "draw_line_width", "draw_rectangle", "draw_rectangle_colour",
+			"draw_rectangle_color", "draw_roundrect", "draw_roundrect_colour", "draw_roundrect_colour_ext",
+			"draw_roundrect_color", "draw_roundrect_color_ext",
+			"draw_triangle", "draw_triangle_colour", "draw_triangle_color",
+			"draw_circle", "draw_circle_colour", "draw_circle_color",
+			"draw_ellipse", "draw_ellipse_colour", "draw_ellipse_color",
+			"draw_arrow", "draw_button", "draw_path", "draw_healthbar",
+			"draw_getpixel", "draw_getpixel_ext",
+			"draw_set_colour", "draw_set_color", "draw_set_alpha", "draw_get_colour", "draw_get_color",
+			"draw_get_alpha", "draw_set_font", "draw_get_font",
+			"draw_set_halign", "draw_set_valign", "draw_get_halign", "draw_get_valign",
+			"draw_primitive_begin", "draw_primitive_begin_texture", "draw_primitive_end",
+			"draw_vertex", "draw_vertex_colour", "draw_vertex_color", "draw_vertex_texture",
+			"draw_vertex_texture_colour", "draw_vertex_texture_color",
+			"draw_clear", "draw_clear_alpha", "draw_point_colour", "draw_point_color",
+			"draw_line_colour", "draw_line_color", "draw_line_width_colour", "draw_line_width_color",
+			"draw_enable_alphablend", "draw_enable_drawevent", "draw_enable_swf_aa",
+			"draw_flush", "draw_get_lighting", "draw_light_define_ambient",
+			"draw_light_define_direction", "draw_light_define_point", "draw_light_enable",
+			"draw_light_get", "draw_light_get_ambient", "draw_set_lighting",
+			"draw_set_circle_precision", "draw_surface", "draw_surface_ext",
+			"draw_surface_part", "draw_surface_part_ext", "draw_surface_stretched",
+			"draw_surface_stretched_ext", "draw_surface_tiled", "draw_surface_tiled_ext",
+			"draw_surface_general", "draw_tilemap", "draw_tile",
+
+			// Surfaces
+			"surface_exists", "surface_create", "surface_create_ext", "surface_resize",
+			"surface_free", "surface_save", "surface_save_part",
+			"surface_set_target", "surface_set_target_ext", "surface_reset_target",
+			"surface_depth_disable", "surface_get_height", "surface_get_width",
+			"surface_get_texture", "surface_get_depth_disable", "surface_getpixel",
+			"surface_getpixel_ext", "surface_get_format", "surface_copy", "surface_copy_part",
+
+			// Buffers
+			"buffer_exists", "buffer_create", "buffer_write", "buffer_read",
+			"buffer_seek", "buffer_get_surface", "buffer_set_surface", "buffer_delete",
+			"buffer_save", "buffer_save_ext", "buffer_load", "buffer_load_ext",
+			"buffer_copy", "buffer_fill", "buffer_get_size", "buffer_tell",
+			"buffer_peek", "buffer_poke", "buffer_save_async", "buffer_load_async",
+			"buffer_compress", "buffer_decompress", "buffer_async_group_begin",
+			"buffer_async_group_option", "buffer_async_group_end",
+			"buffer_copy_from_vertex_buffer", "buffer_get_type", "buffer_get_alignment",
+			"buffer_sizeof", "buffer_md5", "buffer_sha1", "buffer_base64_encode",
+			"buffer_base64_decode", "buffer_base64_decode_ext", "buffer_crc32",
+			"buffer_set_used_size", "buffer_resize",
+
+			// Audio
+			"audio_exists", "audio_get_name", "audio_get_type", "audio_play_sound",
+			"audio_play_sound_at", "audio_play_sound_on", "audio_pause_sound", "audio_pause_all",
+			"audio_resume_sound", "audio_resume_all", "audio_stop_sound", "audio_stop_all",
+			"audio_is_playing", "audio_is_paused", "audio_sound_length",
+			"audio_get_listener_mask", "audio_get_listener_count", "audio_get_listener_info",
+			"audio_sound_get_gain", "audio_sound_get_pitch", "audio_sound_get_track_position",
+			"audio_sound_set_track_position", "audio_sound_gain", "audio_sound_pitch",
+			"audio_falloff_set_model", "audio_emitter_create", "audio_emitter_exists",
+			"audio_emitter_free", "audio_emitter_pitch", "audio_emitter_gain",
+			"audio_emitter_falloff", "audio_emitter_position", "audio_emitter_velocity",
+			"audio_group_load", "audio_group_unload", "audio_group_is_loaded",
+			"audio_group_load_progress", "audio_group_name", "audio_group_stop_all",
+			"audio_group_set_gain", "audio_create_stream", "audio_destroy_stream",
+			"audio_create_sync_group", "audio_destroy_sync_group", "audio_play_in_sync_group",
+			"audio_start_sync_group", "audio_stop_sync_group", "audio_pause_sync_group",
+			"audio_resume_sync_group", "audio_sync_group_get_track_pos", "audio_sync_group_debug",
+			"audio_sync_group_is_playing", "audio_debug", "audio_channel_num",
+			"audio_master_gain", "audio_get_master_gain", "audio_set_master_gain",
+			"audio_get_listener_position", "audio_get_listener_velocity",
+			"audio_listener_position", "audio_listener_velocity", "audio_listener_orientation",
+			"audio_listener_set_position", "audio_listener_set_velocity", "audio_listener_set_orientation",
+			"audio_listener_get_data", "audio_set_listener_mask",
+
+			// Inputs keyboard
+			"keyboard_check", "keyboard_check_pressed", "keyboard_check_released",
+			"keyboard_check_direct", "keyboard_get_numlock", "keyboard_set_numlock",
+			"keyboard_key_press", "keyboard_key_release", "keyboard_clear",
+			"keyboard_set_map", "keyboard_get_map", "keyboard_unset_map",
+			"keyboard_lastchar", "keyboard_lastkey", "keyboard_string",
+			"keyboard_virtual_show", "keyboard_virtual_hide", "keyboard_virtual_status",
+			"keyboard_virtual_height",
+
+			// Inputs mouse
+			"io_clear", "mouse_check_button", "mouse_check_button_pressed",
+			"mouse_check_button_released", "mouse_wheel_up", "mouse_wheel_down",
+			"mouse_clear", "device_mouse_check_button", "device_mouse_check_button_pressed",
+			"device_mouse_check_button_released", "device_mouse_x", "device_mouse_y",
+			"device_mouse_dbclick_enable", "device_mouse_x_to_gui", "device_mouse_y_to_gui",
+			"device_mouse_raw_x", "device_mouse_raw_y",
+			"window_mouse_get_x", "window_mouse_get_y", "window_mouse_set",
+
+			// Inputs Gamepad
+			"gamepad_is_supported", "gamepad_get_device_count",
+			"gamepad_is_connected", "gamepad_get_description", "gamepad_get_button_threshold",
+			"gamepad_get_axis_deadzone", "gamepad_set_button_threshold", "gamepad_set_axis_deadzone",
+			"gamepad_button_check", "gamepad_button_check_pressed", "gamepad_button_check_released",
+			"gamepad_button_count", "gamepad_button_value", "gamepad_axis_count", "gamepad_axis_value",
+			"gamepad_set_vibration", "gamepad_set_colour", "gamepad_set_color",
+			"gamepad_get_option", "gamepad_set_option",
+
+			// Inputs Gesture
+			"gesture_drag_time", "gesture_drag_distance", "gesture_flick_speed",
+			"gesture_double_tap_time", "gesture_double_tap_distance",
+			"gesture_pinch_distance", "gesture_pinch_angle_towards", "gesture_pinch_angle_away",
+			"gesture_rotate_time", "gesture_rotate_angle", "gesture_tap_count",
+			"gesture_get_drag_time", "gesture_get_drag_distance", "gesture_get_flick_speed",
+			"gesture_get_double_tap_time", "gesture_get_double_tap_distance",
+			"gesture_get_pinch_distance", "gesture_get_pinch_angle_towards",
+			"gesture_get_pinch_angle_away", "gesture_get_rotate_time", "gesture_get_rotate_angle",
+			"gesture_get_tap_count",
+
+			// Rooms
+			"room_exists", "room_get_name", "room_goto", "room_goto_next", "room_goto_previous",
+			"room_restart", "room_next", "room_previous", "room_get_camera",
+			"room_set_camera", "room_set_width", "room_set_height", "room_set_persistent",
+			"room_set_background_colour", "room_set_background_color",
+			"room_get_width", "room_get_height", "room_get_viewport",
+			"room_instance_add", "room_instance_clear",
+			"room_set_view", "room_set_view_enabled", "room_get_view_enabled",
+			"room_pack", "room_unpack",
+
+			// Layers
+			"layer_exists", "layer_create", "layer_destroy", "layer_get_id",
+			"layer_get_id_at_depth", "layer_get_depth", "layer_get_element_layer",
+			"layer_get_name", "layer_depth", "layer_get_visible", "layer_set_visible",
+			"layer_get_all", "layer_get_all_elements", "layer_get_element_type",
+			"layer_has_instance", "layer_add_instance", "layer_get_script_begin",
+			"layer_get_script_end", "layer_script_begin", "layer_script_end",
+			"layer_shader", "layer_get_shader", "layer_set_target_room", "layer_get_target_room",
+			"layer_reset_target_room", "layer_get_forced_depth", "layer_force_draw_depth",
+			"layer_is_draw_depth_forced", "layer_get_hspeed", "layer_get_vspeed",
+			"layer_hspeed", "layer_vspeed", "layer_get_x", "layer_get_y", "layer_x", "layer_y",
+			"layer_background_get_id", "layer_background_exists", "layer_background_create",
+			"layer_background_destroy", "layer_background_visible", "layer_background_change",
+			"layer_background_sprite", "layer_background_htiled", "layer_background_vtiled",
+			"layer_background_stretch", "layer_background_yscale", "layer_background_xscale",
+			"layer_background_blend", "layer_background_alpha", "layer_background_index",
+			"layer_background_speed", "layer_background_get_visible", "layer_background_get_blend",
+			"layer_background_get_alpha", "layer_background_get_index", "layer_background_get_speed",
+			"layer_background_get_sprite", "layer_background_get_stretch", "layer_background_get_xscale",
+			"layer_background_get_yscale", "layer_background_get_htiled", "layer_background_get_vtiled",
+			"layer_sprite_get_id", "layer_sprite_exists", "layer_sprite_create", "layer_sprite_destroy",
+			"layer_sprite_change", "layer_sprite_get_sprite", "layer_sprite_get_frame",
+			"layer_sprite_get_speed", "layer_sprite_get_blend", "layer_sprite_get_alpha",
+			"layer_sprite_get_x", "layer_sprite_get_y", "layer_sprite_get_angle",
+			"layer_sprite_get_xscale", "layer_sprite_get_yscale", "layer_sprite_x",
+			"layer_sprite_y", "layer_sprite_angle", "layer_sprite_xscale", "layer_sprite_yscale",
+			"layer_sprite_blend", "layer_sprite_alpha", "layer_sprite_speed",
+			"layer_tilemap_get_id", "layer_tilemap_exists", "layer_tilemap_create",
+			"layer_tile_exists", "layer_tile_create", "layer_tile_destroy",
+			"layer_tile_change", "layer_tile_xscale", "layer_tile_yscale",
+			"layer_tile_blend", "layer_tile_alpha", "layer_tile_x", "layer_tile_y",
+			"layer_tile_region", "layer_tile_visible", "layer_tile_get_visible",
+			"layer_tile_get_xscale", "layer_tile_get_yscale", "layer_tile_get_blend",
+			"layer_tile_get_alpha", "layer_tile_get_x", "layer_tile_get_y", "layer_tile_get_region",
+			"layer_sequence_create", "layer_sequence_destroy", "layer_sequence_exists",
+			"layer_sequence_x", "layer_sequence_y", "layer_sequence_angle",
+			"layer_sequence_xscale", "layer_sequence_yscale", "layer_sequence_headpos",
+			"layer_sequence_headdir", "layer_sequence_speedscale", "layer_sequence_get_x",
+			"layer_sequence_get_y", "layer_sequence_get_angle", "layer_sequence_get_xscale",
+			"layer_sequence_get_yscale", "layer_sequence_get_headpos", "layer_sequence_get_headdir",
+			"layer_sequence_get_speedscale", "layer_sequence_get_sequence",
+			"layer_sequence_play", "layer_sequence_pause", "layer_sequence_get_instance",
+			"layer_sequence_get_head_position", "layer_sequence_get_length",
+			"layer_effect_create", "layer_effect_destroy",
+
+			// Camera/View
+			"camera_create", "camera_create_view", "camera_destroy", "camera_apply",
+			"camera_get_active", "camera_get_default", "camera_set_default",
+			"camera_set_view_mat", "camera_set_proj_mat", "camera_set_update_script",
+			"camera_set_begin_script", "camera_set_end_script", "camera_set_view_pos",
+			"camera_set_view_size", "camera_set_view_speed", "camera_set_view_border",
+			"camera_set_view_angle", "camera_set_view_target",
+			"camera_get_view_mat", "camera_get_proj_mat", "camera_get_update_script",
+			"camera_get_begin_script", "camera_get_end_script", "camera_get_view_x",
+			"camera_get_view_y", "camera_get_view_width", "camera_get_view_height",
+			"camera_get_view_speed_x", "camera_get_view_speed_y", "camera_get_view_border_x",
+			"camera_get_view_border_y", "camera_get_view_angle", "camera_get_view_target",
+			"view_get_camera", "view_get_visible", "view_get_xport", "view_get_yport",
+			"view_get_wport", "view_get_hport", "view_get_surface_id",
+			"view_set_camera", "view_set_visible", "view_set_xport", "view_set_yport",
+			"view_set_wport", "view_set_hport", "view_set_surface_id",
+
+			// Tilemaps
+			"tilemap_tileset", "tilemap_x", "tilemap_y", "tilemap_set",
+			"tilemap_set_at_pixel", "tilemap_set_global_mask", "tilemap_get_global_mask",
+			"tilemap_get_tileset", "tilemap_get_tile_width", "tilemap_get_tile_height",
+			"tilemap_get_width", "tilemap_get_height", "tilemap_get_x", "tilemap_get_y",
+			"tilemap_get", "tilemap_get_at_pixel", "tilemap_get_cell_x_at_pixel",
+			"tilemap_get_cell_y_at_pixel", "tilemap_clear", "tilemap_get_mask",
+			"tilemap_set_mask", "tilemap_get_frame", "tile_set_empty", "tile_set_index",
+			"tile_set_flip", "tile_set_mirror", "tile_set_rotate", "tile_get_empty",
+			"tile_get_index", "tile_get_flip", "tile_get_mirror", "tile_get_rotate",
+			"draw_tile", "draw_tilemap",
+
+			// Tilesets
+			"tileset_get_name", "tileset_get_texture", "tileset_get_uvs",
+			"tileset_get_info", "tileset_get_tile_width", "tileset_get_tile_height",
+			"tileset_get_tile_count",
+
+			// Paths
+			"path_start", "path_end", "path_exists", "path_get_name",
+			"path_get_length", "path_get_time", "path_get_kind", "path_get_closed",
+			"path_get_precision", "path_get_number", "path_get_point_x", "path_get_point_y",
+			"path_get_point_speed", "path_get_x", "path_get_y", "path_get_speed",
+			"path_set_kind", "path_set_closed", "path_set_precision",
+			"path_add", "path_assign", "path_duplicate", "path_append",
+			"path_delete", "path_add_point", "path_insert_point", "path_change_point",
+			"path_delete_point", "path_clear_points", "path_reverse", "path_mirror",
+			"path_flip", "path_rotate", "path_scale", "path_shift",
+
+			// File i/o
+			"file_exists", "file_delete", "file_rename", "file_copy",
+			"directory_exists", "directory_create", "directory_destroy",
+			"file_find_first", "file_find_next", "file_find_close",
+			"file_attributes", "filename_name", "filename_path", "filename_dir",
+			"filename_drive", "filename_ext", "filename_change_ext",
+			"file_text_open_read", "file_text_open_write", "file_text_open_append",
+			"file_text_close", "file_text_write_string", "file_text_write_real",
+			"file_text_writeln", "file_text_read_string", "file_text_read_real",
+			"file_text_readln", "file_text_eof", "file_text_eoln",
+			"file_bin_open", "file_bin_rewrite", "file_bin_close", "file_bin_position",
+			"file_bin_size", "file_bin_seek", "file_bin_write_byte", "file_bin_read_byte",
+			"get_open_filename", "get_save_filename", "get_open_filename_ext",
+			"get_save_filename_ext", "get_string", "get_string_async", "get_integer",
+			"get_integer_async", "get_login_async",
+			"zip_unzip", "load_csv",
+
+			// Json
+			"json_encode", "json_decode", "json_stringify", "json_parse",
+			"json_string_encode", "json_string_decode",
+
+			// === ENCODING FUNCTIONS ===
+			"base64_encode", "base64_decode",
+			"md5_string_unicode", "md5_string_utf8", "md5_file",
+			"sha1_string_unicode", "sha1_string_utf8", "sha1_file",
+
+			// Networking
+			"http_get", "http_get_file", "http_post_string", "http_request",
+			"http_get_request_crossorigin", "http_set_request_crossorigin",
+			"network_create_socket", "network_create_socket_ext", "network_create_server",
+			"network_create_server_raw", "network_connect", "network_connect_async",
+			"network_connect_raw", "network_connect_raw_async", "network_resolve",
+			"network_set_config", "network_set_timeout", "network_send_packet",
+			"network_send_raw", "network_send_broadcast", "network_send_udp",
+			"network_send_udp_raw", "network_destroy",
+
+			// Utility/Types/Vars
+			"show_debug_message", "show_debug_overlay", "debug_event", "debug_get_callstack",
+			"show_message", "show_message_async", "show_question", "show_question_async",
+			"show_error", "game_end", "game_restart", "game_load", "game_load_buffer", "game_save",
+			"game_save_buffer", "game_save_id", "game_load_id",
+			"real", "string", "int64", "ptr", "is_real", "is_string", "is_array",
+			"is_undefined", "is_int32", "is_int64", "is_ptr", "is_vec3", "is_vec4",
+			"is_matrix", "is_bool", "is_method", "is_struct", "is_numeric",
+			"is_infinity", "is_nan", "is_handle",
+			"typeof", "instanceof",
+			"variable_global_exists", "variable_global_get", "variable_global_set",
+			"variable_instance_exists", "variable_instance_get", "variable_instance_set",
+			"variable_instance_get_names", "variable_struct_exists", "variable_struct_get",
+			"variable_struct_get_names", "variable_struct_names_count", "variable_struct_remove",
+			"variable_struct_set", "struct_get", "struct_get_names", "struct_names_count",
+			"struct_remove", "struct_set", "struct_exists", "struct_foreach",
+			"method", "method_call", "method_get_self", "method_get_index",
+			"static_get", "static_set",
+			"parameter_count", "parameter_string",
+
+			// Collisions
+			"place_free", "place_empty", "place_meeting", "place_snapped",
+			"move_random", "move_snap", "move_towards_point", "move_contact_solid",
+			"move_contact_all", "move_outside_solid", "move_outside_all",
+			"move_bounce_solid", "move_bounce_all", "move_wrap",
+			"distance_to_point", "distance_to_object", "position_empty", "position_meeting",
+			"path_start", "path_end", "mp_linear_step", "mp_potential_step",
+			"mp_linear_step_object", "mp_potential_step_object",
+			"mp_linear_path", "mp_potential_path", "mp_linear_path_object",
+			"mp_potential_path_object", "mp_grid_create", "mp_grid_destroy",
+			"mp_grid_clear_all", "mp_grid_clear_cell", "mp_grid_clear_rectangle",
+			"mp_grid_add_cell", "mp_grid_add_rectangle", "mp_grid_add_instances",
+			"mp_grid_path", "mp_grid_draw", "mp_grid_to_ds_grid",
+			"collision_point", "collision_point_list", "collision_rectangle",
+			"collision_rectangle_list", "collision_circle", "collision_circle_list",
+			"collision_ellipse", "collision_ellipse_list", "collision_line",
+			"collision_line_list", "collision_line_first",
+
+			// Time and Time Sources
+			"date_current_datetime", "date_create_datetime", "date_valid_datetime",
+			"date_inc_year", "date_inc_month", "date_inc_week", "date_inc_day",
+			"date_inc_hour", "date_inc_minute", "date_inc_second",
+			"date_get_year", "date_get_month", "date_get_week", "date_get_day",
+			"date_get_hour", "date_get_minute", "date_get_second", "date_get_weekday",
+			"date_get_day_of_year", "date_get_hour_of_year", "date_get_minute_of_year",
+			"date_get_second_of_year", "date_year_span", "date_month_span",
+			"date_week_span", "date_day_span", "date_hour_span", "date_minute_span",
+			"date_second_span", "date_compare_datetime", "date_compare_date",
+			"date_compare_time", "date_date_of", "date_time_of", "date_datetime_string",
+			"date_date_string", "date_time_string", "date_days_in_month", "date_days_in_year",
+			"date_leap_year", "date_is_today", "date_set_timezone", "date_get_timezone",
+			"time_source_create", "time_source_destroy", "time_source_start",
+			"time_source_stop", "time_source_pause", "time_source_resume",
+			"time_source_reconfigure", "time_source_reset", "time_source_get_children",
+			"time_source_get_period", "time_source_get_reps_completed",
+			"time_source_get_reps_remaining", "time_source_get_state",
+			"time_source_get_time_remaining", "time_source_exists",
+
+			// Shaders
+			"shader_set", "shader_reset", "shader_current", "shader_get_name",
+			"shader_get_uniform", "shader_get_sampler_index", "shader_set_uniform_i",
+			"shader_set_uniform_i_array", "shader_set_uniform_f", "shader_set_uniform_f_array",
+			"shader_set_uniform_matrix", "shader_set_uniform_matrix_array",
+			"shader_enable_corner_id", "shader_is_compiled", "shader_get_shader_info",
+
+			// Particles
+			"part_type_create", "part_type_destroy", "part_type_exists", "part_type_clear",
+			"part_type_shape", "part_type_sprite", "part_type_size", "part_type_scale",
+			"part_type_orientation", "part_type_life", "part_type_step", "part_type_death",
+			"part_type_speed", "part_type_direction", "part_type_gravity", "part_type_colour1",
+			"part_type_colour2", "part_type_colour3", "part_type_color1", "part_type_color2",
+			"part_type_color3", "part_type_alpha1", "part_type_alpha2", "part_type_alpha3",
+			"part_type_blend", "part_system_create", "part_system_destroy", "part_system_exists",
+			"part_system_clear", "part_system_draw_order", "part_system_depth",
+			"part_system_position", "part_system_automatic_update", "part_system_automatic_draw",
+			"part_system_update", "part_system_drawit", "part_system_get_layer",
+			"part_system_layer", "part_particles_create", "part_particles_create_colour",
+			"part_particles_create_color", "part_particles_clear", "part_particles_count",
+			"part_emitter_create", "part_emitter_destroy", "part_emitter_destroy_all",
+			"part_emitter_exists", "part_emitter_clear", "part_emitter_region",
+			"part_emitter_burst", "part_emitter_stream",
+
+			// Sequences
+			"sequence_create", "sequence_destroy", "sequence_exists", "sequence_get",
+			"sequence_track_new", "sequence_keyframe_new", "sequence_keyframedata_new",
+			"sequence_get_objects", "layer_sequence_create", "layer_sequence_destroy",
+			"layer_sequence_exists", "layer_sequence_play", "layer_sequence_pause",
+			"sequence_instance_override_object",
+
+			// Animcurves
+			"animcurve_get", "animcurve_get_channel", "animcurve_channel_evaluate",
+			"animcurve_get_channel_index", "animcurve_channel_new",
+
+			// Vertex
+			"vertex_format_begin", "vertex_format_end", "vertex_format_delete",
+			"vertex_format_add_position", "vertex_format_add_position_3d",
+			"vertex_format_add_colour", "vertex_format_add_color", "vertex_format_add_normal",
+			"vertex_format_add_texcoord", "vertex_format_add_textcoord",
+			"vertex_format_add_custom", "vertex_create_buffer", "vertex_create_buffer_ext",
+			"vertex_delete_buffer", "vertex_begin", "vertex_end", "vertex_position",
+			"vertex_position_3d", "vertex_colour", "vertex_color", "vertex_argb",
+			"vertex_texcoord", "vertex_normal", "vertex_float1", "vertex_float2",
+			"vertex_float3", "vertex_float4", "vertex_ubyte4", "vertex_submit",
+			"vertex_freeze", "vertex_get_number", "vertex_get_buffer_size",
+			"vertex_create_buffer_from_buffer", "vertex_create_buffer_from_buffer_ext",
+
+			// Physics
+			"physics_world_create", "physics_world_gravity", "physics_world_update_speed",
+			"physics_world_update_iterations", "physics_world_draw_debug",
+			"physics_pause_enable", "physics_fixture_create", "physics_fixture_delete",
+			"physics_fixture_set_kinematic", "physics_fixture_set_density",
+			"physics_fixture_set_awake", "physics_fixture_set_restitution",
+			"physics_fixture_set_friction", "physics_fixture_set_collision_group",
+			"physics_fixture_set_sensor", "physics_fixture_set_linear_damping",
+			"physics_fixture_set_angular_damping", "physics_fixture_set_circle_shape",
+			"physics_fixture_set_box_shape", "physics_fixture_set_edge_shape",
+			"physics_fixture_set_polygon_shape", "physics_fixture_set_chain_shape",
+			"physics_fixture_add_point", "physics_fixture_bind", "physics_fixture_bind_ext",
+			"physics_remove_fixture", "physics_set_friction", "physics_set_density",
+			"physics_set_restitution", "physics_get_friction", "physics_get_density",
+			"physics_get_restitution", "physics_mass_properties", "physics_draw_debug",
+			"physics_test_overlap", "physics_remove_fixture", "physics_apply_force",
+			"physics_apply_impulse", "physics_apply_angular_impulse", "physics_apply_local_force",
+			"physics_apply_local_impulse", "physics_apply_torque", "physics_mass_properties",
+			"physics_draw_debug", "physics_test_overlap", "physics_particle_create",
+			"physics_particle_delete", "physics_particle_delete_region_circle",
+			"physics_particle_delete_region_box", "physics_particle_delete_region_poly",
+			"physics_particle_set_flags", "physics_particle_set_category_flags",
+			"physics_particle_draw", "physics_particle_draw_ext", "physics_particle_count",
+			"physics_particle_get_data", "physics_particle_get_data_particle",
+			"physics_particle_group_begin", "physics_particle_group_circle",
+			"physics_particle_group_box", "physics_particle_group_polygon",
+			"physics_particle_group_add_point", "physics_particle_group_end",
+			"physics_particle_group_join", "physics_particle_group_delete",
+			"physics_particle_group_count", "physics_particle_group_get_data",
+			"physics_particle_group_get_mass", "physics_particle_group_get_inertia",
+			"physics_particle_group_get_centre_x", "physics_particle_group_get_centre_y",
+			"physics_particle_group_get_vel_x", "physics_particle_group_get_vel_y",
+			"physics_particle_group_get_ang_vel", "physics_particle_group_get_x",
+			"physics_particle_group_get_y", "physics_particle_group_get_angle",
+			"physics_particle_set_group_flags", "physics_particle_get_group_flags",
+			"physics_particle_get_max_count", "physics_particle_get_radius",
+			"physics_particle_get_density", "physics_particle_get_damping",
+			"physics_particle_get_gravity_scale", "physics_particle_set_max_count",
+			"physics_particle_set_radius", "physics_particle_set_density",
+			"physics_particle_set_damping", "physics_particle_set_gravity_scale",
+			"physics_joint_distance_create", "physics_joint_rope_create",
+			"physics_joint_revolute_create", "physics_joint_prismatic_create",
+			"physics_joint_pulley_create", "physics_joint_wheel_create",
+			"physics_joint_weld_create", "physics_joint_friction_create",
+			"physics_joint_gear_create", "physics_joint_delete", "physics_joint_enable_motor",
+			"physics_joint_get_value", "physics_joint_set_value",
+			"physics_overlap_region_create", "physics_overlap_region_destroy",
+			"physics_overlap_region_report",
+
+			// Extensions
+			"external_call", "external_define", "external_free",
+			"extension_get_option_value",
+
+			// Spine
+			"skeleton_animation_set", "skeleton_animation_get", "skeleton_animation_mix",
+			"skeleton_animation_set_ext", "skeleton_animation_get_ext",
+			"skeleton_animation_get_duration", "skeleton_animation_get_frames",
+			"skeleton_animation_clear", "skeleton_skin_set", "skeleton_skin_get",
+			"skeleton_skin_create", "skeleton_attachment_set", "skeleton_attachment_get",
+			"skeleton_attachment_create", "skeleton_collision_draw_set",
+			"skeleton_bone_data_get", "skeleton_bone_data_set", "skeleton_bone_state_get",
+			"skeleton_bone_state_set", "skeleton_get_minmax", "skeleton_get_num_bounds",
+			"skeleton_get_bounds", "skeleton_slot_data", "skeleton_slot_colour_set",
+			"skeleton_slot_colour_get", "skeleton_slot_alpha_set", "skeleton_slot_alpha_get",
+			"draw_skeleton", "draw_skeleton_time", "draw_skeleton_instance",
+			"draw_skeleton_collision",
+
+			// Rollback
+			"rollback_create_game", "rollback_join_game", "rollback_leave_game",
+			"rollback_get_info", "rollback_get_state", "rollback_connect_player",
+			"rollback_disconnect_player", "rollback_sync_on_frame", "rollback_apply_state",
+			"rollback_net_event", "rollback_get_current_frame", "rollback_get_player_input",
+			"rollback_get_predicted_frame", "rollback_use_player_prefs",
+			"rollback_event_param", "rollback_create_mock_input", "rollback_leave_game",
+			"rollback_chat", "rollback_get_region", "rollback_debug_ping",
+
+			// GPU/Window/Misc
+			"clipboard_has_text", "clipboard_set_text", "clipboard_get_text",
+			"get_timer", "get_integer", "get_string",
+			"window_set_fullscreen", "window_get_fullscreen", "window_set_caption",
+			"window_get_caption", "window_set_min_width", "window_set_min_height",
+			"window_set_max_width", "window_set_max_height", "window_get_width",
+			"window_get_height", "window_set_position", "window_get_x", "window_get_y",
+			"window_set_size", "window_set_rectangle", "window_centre", "window_center",
+			"window_get_colour", "window_get_color", "window_set_colour", "window_set_color",
+			"window_get_visible_rects", "window_get_cursor", "window_set_cursor",
+			"display_get_width", "display_get_height", "display_get_orientation",
+			"display_get_gui_width", "display_get_gui_height", "display_get_gui_aspect_ratio",
+			"display_set_gui_size", "display_set_gui_maximise", "display_set_gui_maximize",
+			"display_get_timing_method", "display_set_timing_method",
+			"display_set_sleep_margin", "display_get_sleep_margin",
+			"display_set_frequency", "display_get_frequency", "display_reset",
+			"display_mouse_get_x", "display_mouse_get_y", "display_mouse_set",
+			"texture_set_stage", "texture_get_texel_width", "texture_get_texel_height",
+			"shaders_are_supported", "texture_set_interpolation",
+			"texture_set_blending", "texture_set_repeat", "texture_set_repeat_ext",
+			"texture_get_width", "texture_get_height", "texture_get_uvs",
+			"texture_debug_messages", "texture_is_ready", "texture_prefetch",
+			"texture_flush", "texture_flush_multi", "gpu_set_blendenable",
+			"gpu_set_ztestenable", "gpu_set_zfunc", "gpu_set_zwriteenable",
+			"gpu_set_lightingenable", "gpu_set_fog", "gpu_set_cullmode",
+			"gpu_set_blendmode", "gpu_set_blendmode_ext", "gpu_set_blendmode_ext_sepalpha",
+			"gpu_set_colorwriteenable", "gpu_set_colourwriteenable", "gpu_set_alphatestenable",
+			"gpu_set_alphatestref", "gpu_set_alphatestfunc", "gpu_set_texfilter",
+			"gpu_set_texfilter_ext", "gpu_set_texrepeat", "gpu_set_texrepeat_ext",
+			"gpu_set_tex_filter", "gpu_set_tex_repeat", "gpu_set_tex_mip_filter",
+			"gpu_set_tex_mip_bias", "gpu_set_tex_min_mip", "gpu_set_tex_max_mip",
+			"gpu_set_tex_max_aniso", "gpu_set_tex_mip_enable", "gpu_get_blendenable",
+			"gpu_get_ztestenable", "gpu_get_zfunc", "gpu_get_zwriteenable",
+			"gpu_get_lightingenable", "gpu_get_fog", "gpu_get_cullmode",
+			"gpu_get_blendmode", "gpu_get_blendmode_ext", "gpu_get_blendmode_ext_sepalpha",
+			"gpu_get_blendmode_src", "gpu_get_blendmode_dest", "gpu_get_blendmode_srcalpha",
+			"gpu_get_blendmode_destalpha", "gpu_get_colorwriteenable",
+			"gpu_get_colourwriteenable", "gpu_get_alphatestenable", "gpu_get_alphatestref",
+			"gpu_get_alphatestfunc", "gpu_get_texfilter", "gpu_get_texfilter_ext",
+			"gpu_get_texrepeat", "gpu_get_texrepeat_ext", "gpu_push_state", "gpu_pop_state",
+			"gpu_get_state", "gpu_set_state", "matrix_get", "matrix_set",
+			"matrix_build_identity", "matrix_build", "matrix_build_lookat",
+			"matrix_build_projection_ortho", "matrix_build_projection_perspective",
+			"matrix_build_projection_perspective_fov", "matrix_multiply",
+			"matrix_transform_vertex", "matrix_stack_push", "matrix_stack_pop",
+			"matrix_stack_multiply", "matrix_stack_set", "matrix_stack_clear",
+			"matrix_stack_top", "matrix_stack_is_empty"
+		};
+		for (auto& k : identifiers)
+		{
+			Identifier id;
+			langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
+		}
+
+		// Built-in Vars
+		static const char* const preprocIdentifiers[] = {
+
+			// Built-in instance
+			"id", "object_index", "mask_index", "solid", "persistent", "depth",
+			"layer", "alarm", "timeline_index", "timeline_position", "timeline_speed",
+			"timeline_running", "timeline_loop", "visible", "sprite_index",
+			"sprite_width", "sprite_height", "sprite_xoffset", "sprite_yoffset",
+			"image_number", "image_index", "image_speed", "image_xscale", "image_yscale",
+			"image_angle", "image_alpha", "image_blend",
+			"bbox_left", "bbox_right", "bbox_top", "bbox_bottom",
+			"x", "y", "xprevious", "yprevious", "xstart", "ystart",
+			"hspeed", "vspeed", "direction", "speed", "friction", "gravity", "gravity_direction",
+			"path_index", "path_position", "path_positionprevious", "path_speed",
+			"path_scale", "path_orientation", "path_endaction",
+
+			// Physics
+			"phy_rotation", "phy_position_x", "phy_position_y", "phy_angular_velocity",
+			"phy_linear_velocity_x", "phy_linear_velocity_y", "phy_speed_x", "phy_speed_y",
+			"phy_angular_damping", "phy_linear_damping", "phy_bullet", "phy_fixed_rotation",
+			"phy_active", "phy_mass", "phy_inertia", "phy_com_x", "phy_com_y",
+			"phy_dynamic", "phy_kinematic", "phy_sleeping", "phy_collision_points",
+			"phy_collision_x", "phy_collision_y", "phy_col_normal_x", "phy_col_normal_y",
+			"phy_speed", "phy_position_xprevious", "phy_position_yprevious",
+
+			// Room
+			"room", "room_width", "room_height", "room_caption", "room_speed",
+			"room_persistent", "room_first", "room_last",
+
+			// Mouse
+			"mouse_x", "mouse_y", "mouse_button", "mouse_lastbutton",
+
+			// Keyboard
+			"keyboard_key", "keyboard_lastkey", "keyboard_lastchar", "keyboard_string",
+
+			// Game/Application
+			"application_surface",
+			"game_id", "game_display_name", "game_project_name", "game_save_id",
+			"working_directory", "temp_directory", "program_directory",
+			"browser_width", "browser_height",
+			"os_type", "os_device", "os_browser", "os_version",
+			"display_aa", "async_load", "event_data", "event_type", "event_number",
+			"event_object", "event_action",
+			"delta_time", "current_time", "current_year", "current_month",
+			"current_day", "current_weekday", "current_hour", "current_minute", "current_second",
+			"fps", "fps_real",
+			"cursor_sprite", "error_occurred", "error_last",
+			"gamemaker_pro", "gamemaker_registered", "gamemaker_version",
+
+			// Arguments
+			"argument0", "argument1", "argument2", "argument3", "argument4",
+			"argument5", "argument6", "argument7", "argument8", "argument9",
+			"argument10", "argument11", "argument12", "argument13", "argument14", "argument15",
+			"argument_count", "argument_relative",
+
+			// View
+			"view_enabled", "view_current",
+			"view_visible", "view_xview", "view_yview", "view_wview", "view_hview",
+			"view_angle", "view_hborder", "view_vborder", "view_hspeed", "view_vspeed",
+			"view_object", "view_surface_id", "view_camera",
+
+		};
+		for (auto& k : preprocIdentifiers)
+		{
+			Identifier id;
+			id.mDeclaration = "Built-in variable";
+			langDef.mPreprocIdentifiers.insert(std::make_pair(std::string(k), id));
+		}
+
+		// Constants
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
-			"\\b(?:if|else|switch|case|default|break|continue|return|for|while|do|repeat|with|function|constructor|static|enum|var|globalvar|new|delete|try|catch)\\b",
-			PaletteIndex::Keyword));
+			"\\b(?:true|false|pi|infinity|NaN|self|other|all|noone|global|undefined|pointer_null|pointer_invalid"
+			"c_[a-z]+|"
+			"mb_[a-z]+|"
+			"vk_[a-z0-9]+|"
+			"fa_[a-z]+|"
+			"pr_[a-z]+|"
+			"bm_[a-z_]+|"
+			"buffer_[a-z0-9]+|"
+			"audio_[a-z_]+|"
+			"gp_[a-z0-9]+|"
+			"os_[a-z]+|"
+			"browser_[a-z_]+|"
+			"device_[a-z_]+|"
+			"bboxkind_[a-z]+|bboxmode_[a-z]+|"
+			"path_action_[a-z]+|"
+			"layerelementtype_[a-z]+|"
+			"surface_[a-z0-9]+|"
+			"tf_[a-z]+|"
+			"cr_[a-z]+|"
+			"spritespeed_[a-z]+|"
+			"gamespeed_[a-z]+|"
+			"matrix_view|matrix_projection|matrix_world|"
+			"ef_[a-z]+|fx_[a-z]+|"
+			"ty_[a-z]+|"
+			"ds_type_[a-z]+|"
+			"ev_[a-z_0-9]+|"
+			"network_socket_[a-z_]+|network_type_[a-z_]+|network_config_[a-z_]+|"
+			"phy_debug_[a-z_]+|phy_joint_[a-z_]+|phy_particle_flag_[a-z]+|phy_particle_group_flag_[a-z]+|"
+			"vertex_type_[a-z0-9]+|vertex_usage_[a-z]+|"
+			"tile_rotate|tile_flip|tile_mirror|tile_index_mask|"
+			"ev_gesture_[a-z]+|"
+			"display_landscape|display_landscape_flipped|display_portrait|display_portrait_flipped|"
+			"cmpfunc_[a-z]+|cull_[a-z]+|lighttype_[a-z]+|"
+			"time_source_units_[a-z]+|time_source_state_[a-z]+|"
+			"spr_[a-z]+|"
+			"true|false"
+			")\\b",
+			PaletteIndex::Preprocessor
+		));
 
-		// ----- Built-in functions: Arrays & Data Structures -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:array_length|array_create|array_resize|array_push|array_pop|array_insert|array_delete|"
-			"struct_get|struct_get_from_hash|struct_set|struct_set_from_hash|struct_exists|struct_exists_from_hash|struct_foreach|struct_remove|struct_remove_from_hash|struct_get_names|struct_names_count|"
-			"ds_map_create|ds_map_destroy|ds_map_clear|ds_map_size|ds_map_add|ds_map_replace|ds_map_delete|ds_map_exists|ds_map_find_value|ds_map_find_first|ds_map_find_next|"
-			"ds_list_create|ds_list_destroy|ds_list_clear|ds_list_size|ds_list_add|ds_list_insert|ds_list_delete|ds_list_replace|ds_list_find_index|ds_list_find_value|"
-			"ds_grid_create|ds_grid_destroy|ds_grid_clear|ds_grid_width|ds_grid_height|ds_grid_set|ds_grid_get|ds_grid_add|ds_grid_multiply|"
-			"ds_priority_create|ds_priority_destroy|ds_priority_clear|ds_priority_size|ds_priority_add|ds_priority_change_priority|ds_priority_delete_min|"
-			"ds_stack_create|ds_stack_destroy|ds_stack_clear|ds_stack_size|ds_stack_push|ds_stack_pop|"
-			"ds_queue_create|ds_queue_destroy|ds_queue_clear|ds_queue_size|ds_queue_enqueue|ds_queue_dequeue)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Strings (double quotes)
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"\\\"(\\\\.|[^\\\"])*\\\"",
+			PaletteIndex::String
+		));
 
-		// ----- Built-in functions: Strings -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:string|string_format|string_length|string_pos|string_copy|string_delete|string_insert|string_replace|string_replace_all|"
-			"string_lower|string_upper|string_repeat|string_trim|real|ord|chr)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Strings (single quotes)
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"'(\\\\.|[^'])*'",
+			PaletteIndex::String
+		));
 
-		// ----- Built-in functions: Math & Misc -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:abs|sign|min|max|clamp|lerp|sqrt|sqr|power|exp|ln|log2|log10|floor|ceil|round|frac|"
-			"sin|cos|tan|arcsin|arccos|arctan|arctan2|"
-			"random|random_range|irandom|irandom_range|choose|median|mean)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Multi-line strings (@"...")
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"@\\\"(\\\\.|[^\\\"])*\\\"",
+			PaletteIndex::String
+		));
 
-		// ----- Built-in functions: Matrices / 3D -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:matrix_build|matrix_build_lookat|matrix_build_projection|matrix_build_identity|matrix_get|matrix_set|"
-			"lengthdir_x|lengthdir_y|dot_product|dot_product_3d|cross_product)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Multi-line strings (@'...')
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"@'(\\\\.|[^'])*'",
+			PaletteIndex::String
+		));
 
-		// ----- Built-in functions: Instances & Objects -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:instance_create_layer|instance_destroy|instance_find|instance_number|with|"
-			"object_exists|layer_get_id|layer_x|layer_y|layer_get_layer_id)|\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Template strings ($"...")
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"\\$\\\"(\\\\.|[^\\\"])*\\\"",
+			PaletteIndex::String
+		));
 
-		// ----- Built-in functions: Drawing -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:draw_self|draw_text|draw_text_transformed|draw_text_colour|draw_rectangle|draw_rectangle_colour|draw_line|draw_line_width|"
-			"draw_circle|draw_circle_colour|draw_triangle|draw_point|draw_sprite|draw_sprite_ext|draw_sprite_part|draw_sprite_general|"
-			"draw_set_alpha|draw_set_color|draw_set_colour|draw_set_halign|draw_set_valign|draw_set_font)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Numbers (hex)
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"\\$[0-9a-fA-F]+",
+			PaletteIndex::Number
+		));
 
-		// ----- Built-in functions: Surfaces / Textures / Buffers -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:surface_create|surface_free|surface_exists|surface_set_target|surface_reset_target|surface_get_width|surface_get_height|"
-			"buffer_create|buffer_delete|buffer_get_size|buffer_seek|buffer_peek|buffer_poke|buffer_read|buffer_write)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"0[xX][0-9a-fA-F]+",
+			PaletteIndex::Number
+		));
 
-		// ----- Built-in functions: Shaders / GPU -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:shader_is_compiled|shader_get_uniform|shader_set|shader_reset|shader_set_uniform_f|shader_set_uniform_i|"
-			"gpu_set_blendenable|gpu_set_cullmode|gpu_set_ztestenable|gpu_set_zwriteenable|gpu_set_fog|gpu_set_alphatestenable)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Numbers (binary)
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"0[bB][01]+",
+			PaletteIndex::Number
+		));
 
-		// ----- Built-in functions: Audio -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:audio_play_sound|audio_stop_sound|audio_stop_all|audio_is_playing|audio_pause_sound|audio_resume_sound|"
-			"audio_sound_gain|audio_sound_pitch|audio_emitter_create|audio_emitter_free|audio_listener_position)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Numbers
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?",
+			PaletteIndex::Number
+		));
 
-		// ----- Built-in functions: Input / Window / Time -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:keyboard_check|keyboard_check_pressed|keyboard_check_released|keyboard_lastkey|mouse_check_button|mouse_check_button_pressed|mouse_x|mouse_y|"
-			"window_set_fullscreen|window_get_fullscreen|window_set_size|window_get_width|window_get_height|"
-			"get_timer|current_time|delta_time|fps|fps_real)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
+		// Generic identifier
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"[a-zA-Z_][a-zA-Z0-9_]*",
+			PaletteIndex::Identifier
+		));
 
-		// ----- Built-in: Dialogs & Simple Input -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:show_message|show_message_async|get_integer|get_integer_async|get_string|get_string_async|"
-			"get_open_filename|get_open_filename_ext|get_save_filename|get_save_filename_ext|"
-			"get_directory|get_login_async|clipboard_get_text|clipboard_set_text|clipboard_has_text|)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in: Debug & Logging -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:show_debug_message|debug_event|debug_get_callstack|"
-			"variable_global_exists|variable_instance_exists|variable_struct_exists|variable_instance_get|variable_instance_set)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in: Timing & Date/Time -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:get_timer|current_time|delta_time|fps|fps_real|"
-			"date_current_datetime|date_current_date|date_current_time|date_time_string|date_date_string|"
-			"date_create_datetime|date_inc_day|date_inc_hour|date_inc_minute|date_inc_second|date_compare_datetime)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in: Application / Window / Display -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:application_surface_draw_enable|application_surface_enable|application_get_position|application_set_position|"
-			"window_set_fullscreen|window_get_fullscreen|window_set_size|window_set_rectangle|window_get_width|window_get_height|"
-			"display_get_width|display_get_height|display_get_gui_width|display_get_gui_height|display_mouse_get_x|display_mouse_get_y|"
-			"window_set_caption|window_get_caption|window_set_cursor|window_mouse_get_x|window_mouse_get_y|"
-			"screen_refresh|screen_save|screen_save_part)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in: INI / File I/O (commonly used in tools) -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:ini_open|ini_close|ini_read_string|ini_read_real|ini_write_string|ini_write_real|ini_key_exists|ini_section_exists|"
-			"file_exists|file_delete|file_copy|file_rename|file_text_open_read|file_text_open_write|file_text_open_append|file_text_close|"
-			"file_text_read_string|file_text_readln|file_text_eof|file_text_write_string|file_text_writeln)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in: System Info / OS / Paths -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:os_get_config|os_get_info|os_type|os_browser|"
-			"filename_dir|filename_name|filename_ext|filename_change_ext|directory_exists|"
-			"working_directory|get_project_name|get_open_filename|get_save_filename)\\b(?=\\s*\\()",
-			TextEditor::PaletteIndex::KnownIdentifier
-			});
-
-		// ----- Built-in variables & constants -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:self|other|global|noone|all|true|false|undefined|pi|"
-			"c_black|c_white|c_silver|c_gray|c_maroon|c_red|c_purple|c_fuchsia|c_green|c_lime|c_olive|c_yellow|c_navy|c_blue|c_teal|c_aqua)\\b",
-			TextEditor::PaletteIndex::Preprocessor
-			});
-
-		// ----- Built-in variables (colorized separately as PreprocIdentifier) -----
-		langDef.mTokenRegexStrings.push_back({
-			"\\b(?:room|room_first|room_last|room_speed|room_width|room_height|"
-			"mouse_x|mouse_y|mouse_wheel_up|mouse_wheel_down|"
-			"keyboard_key|keyboard_lastkey|keyboard_lastchar|"
-			"os_type|os_browser|platform_name|application_surface)\\b",
-			TextEditor::PaletteIndex::PreprocIdentifier
-			});
-
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+", PaletteIndex::Number));
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?", PaletteIndex::Number));
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
-		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation));
+		// Punctuation
+		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
+			"[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]",
+			PaletteIndex::Punctuation
+		));
 
 		langDef.mSingleLineComment = "//";
-
 		langDef.mCommentStart = "/*";
 		langDef.mCommentEnd = "*/";
 
-		langDef.mCaseSensitive = false;
+		langDef.mCaseSensitive = true;
 		langDef.mAutoIndentation = true;
-
 		langDef.mName = "GML";
 
 		inited = true;

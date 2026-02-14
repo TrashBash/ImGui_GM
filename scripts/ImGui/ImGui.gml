@@ -1877,6 +1877,15 @@ function ImGui() constructor {
 		return __imgui_text_editor_get_palette_color(_handle, _index);
 	}
 
+	/// @function TextEditorGetPaletteAlpha(_handle, _index)
+	/// @argument {Real} _handle
+	/// @argument {Real} _index
+	/// @context ImGui
+	/// @return {Real}
+	static TextEditorGetPaletteAlpha = function(_handle, _index) {
+		return __imgui_text_editor_get_palette_alpha(_handle, _index);
+	}
+
 	/// @function TextEditorSetPaletteColor(_handle, _index, _color, _alpha)
 	/// @argument {Real} _handle
 	/// @argument {Real} _index
@@ -1886,6 +1895,166 @@ function ImGui() constructor {
 	/// @return {Unknown<unset>}
 	static TextEditorSetPaletteColor = function(_handle, _index, _color, _alpha=255) {
 		return __imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha);
+	}
+
+	/// @function TextEditorSetErrorMarker(_handle, _line, _message)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @argument {String} _message
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetErrorMarker = function(_handle, _line, _message) {
+		return __imgui_text_editor_set_error_marker(_handle, _line, _message);
+	}
+
+	/// @function TextEditorRemoveErrorMarker(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRemoveErrorMarker = function(_handle, _line) {
+		return __imgui_text_editor_remove_error_marker(_handle, _line);
+	}
+
+	/// @function TextEditorClearErrorMarkers(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearErrorMarkers = function(_handle) {
+		return __imgui_text_editor_clear_error_markers(_handle);
+	}
+
+	/// @function TextEditorGetErrorMarker(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorGetErrorMarker = function(_handle, _line) {
+		return __imgui_text_editor_get_error_marker(_handle, _line);
+	}
+
+	/// @function TextEditorSetBreakpoint(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSetBreakpoint = function(_handle, _line) {
+		return __imgui_text_editor_set_breakpoint(_handle, _line);
+	}
+
+	/// @function TextEditorRemoveBreakpoint(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRemoveBreakpoint = function(_handle, _line) {
+		return __imgui_text_editor_remove_breakpoint(_handle, _line);
+	}
+
+	/// @function TextEditorClearBreakpoints(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearBreakpoints = function(_handle) {
+		return __imgui_text_editor_clear_breakpoints(_handle);
+	}
+
+	/// @function TextEditorHasBreakpoint(_handle, _line)
+	/// @argument {Real} _handle
+	/// @argument {Real} _line
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorHasBreakpoint = function(_handle, _line) {
+		return __imgui_text_editor_has_breakpoint(_handle, _line);
+	}
+
+	/// @function TextEditorAddKeyword(_handle, _keyword)
+	/// @argument {Real} _handle
+	/// @argument {String} _keyword
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorAddKeyword = function(_handle, _keyword) {
+		return __imgui_text_editor_add_keyword(_handle, _keyword);
+	}
+
+	/// @function TextEditorRemoveKeyword(_handle, _keyword)
+	/// @argument {Real} _handle
+	/// @argument {String} _keyword
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRemoveKeyword = function(_handle, _keyword) {
+		return __imgui_text_editor_remove_keyword(_handle, _keyword);
+	}
+
+	/// @function TextEditorClearKeywords(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearKeywords = function(_handle) {
+		return __imgui_text_editor_clear_keywords(_handle);
+	}
+
+	/// @function TextEditorAddIdentifier(_handle, _identifier, _declaration)
+	/// @argument {Real} _handle
+	/// @argument {String} _identifier
+	/// @argument {String} [_declaration=]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorAddIdentifier = function(_handle, _identifier, _declaration="") {
+		return __imgui_text_editor_add_identifier(_handle, _identifier, _declaration);
+	}
+
+	/// @function TextEditorRemoveIdentifier(_handle, _identifier)
+	/// @argument {Real} _handle
+	/// @argument {String} _identifier
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRemoveIdentifier = function(_handle, _identifier) {
+		return __imgui_text_editor_remove_identifier(_handle, _identifier);
+	}
+
+	/// @function TextEditorClearIdentifiers(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearIdentifiers = function(_handle) {
+		return __imgui_text_editor_clear_identifiers(_handle);
+	}
+
+	/// @function TextEditorAddPreprocIdentifier(_handle, _identifier, _declaration)
+	/// @argument {Real} _handle
+	/// @argument {String} _identifier
+	/// @argument {String} [_declaration=]
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorAddPreprocIdentifier = function(_handle, _identifier, _declaration="") {
+		return __imgui_text_editor_add_preproc_identifier(_handle, _identifier, _declaration);
+	}
+
+	/// @function TextEditorRemovePreprocIdentifier(_handle, _identifier)
+	/// @argument {Real} _handle
+	/// @argument {String} _identifier
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorRemovePreprocIdentifier = function(_handle, _identifier) {
+		return __imgui_text_editor_remove_preproc_identifier(_handle, _identifier);
+	}
+
+	/// @function TextEditorClearPreprocIdentifiers(_handle)
+	/// @argument {Real} _handle
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorClearPreprocIdentifiers = function(_handle) {
+		return __imgui_text_editor_clear_preproc_identifiers(_handle);
+	}
+
+	/// @function TextEditorAddConstant(_handle, _constant)
+	/// @argument {Real} _handle
+	/// @argument {String} _constant
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorAddConstant = function(_handle, _constant) {
+		return __imgui_text_editor_add_constant(_handle, _constant);
 	}
 
 	/// @function MemoryEditorShowWindow(title, buffer, offset, size)

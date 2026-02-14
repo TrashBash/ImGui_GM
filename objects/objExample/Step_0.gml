@@ -114,13 +114,16 @@ if (!init) {
 
 ImGui.Begin("Editor");
 	
-	ImGui.BeginChild("##editorsettings", 192);
+	// Settings
+	ImGui.BeginChild("##editorsettings", 232);
+	
 		if (ImGui.CollapsingHeader("Settings"))
 		{
 			editor.SetReadOnly(ImGui.Checkbox("Read Only", editor.IsReadOnly()));
 			editor.SetShowWhitespaces(ImGui.Checkbox("Show Whitespaces", editor.IsShowingWhitespaces()));
 			editor.SetColorizerEnable(ImGui.Checkbox("Colorizer", editor.IsColorizerEnabled()));
 			editor.SetTabSize(ImGui.SliderInt("Tab Size", editor.GetTabSize(), 1, 8));
+			
 			if (ImGui.Button("Select all"))
 				editor.SelectAll();
 		
@@ -134,7 +137,6 @@ ImGui.Begin("Editor");
 						editor.SetLanguage(SEL_LANG);
 					}
 				}
-		
 				ImGui.EndCombo();
 			}
 	
@@ -148,25 +150,185 @@ ImGui.Begin("Editor");
 						editor.SetPalette(SEL_PAL);
 					}
 				}
-		
 				ImGui.EndCombo();
+			}
+		}
+		
+		// Edit Operations
+		if (ImGui.CollapsingHeader("Edit"))
+		{
+			ImGui.BeginDisabled(!editor.CanUndo());
+			if (ImGui.Button("Undo", 90))
+				editor.Undo();
+			ImGui.EndDisabled();
+			
+			ImGui.SameLine();
+			
+			ImGui.BeginDisabled(!editor.CanRedo());
+			if (ImGui.Button("Redo", 90))
+				editor.Redo();
+			ImGui.EndDisabled();
+			
+			if (ImGui.Button("Copy", 90))
+				editor.Copy();
+			
+			ImGui.SameLine();
+			
+			if (ImGui.Button("Paste", 90))
+				editor.Paste();
+			
+			if (ImGui.Button("Cut", 90))
+				editor.Cut();
+			
+			ImGui.SameLine();
+			
+			if (ImGui.Button("Delete", 90))
+				editor.Delete();
+		}
+		
+		// Error Markers
+		if (ImGui.CollapsingHeader("Errors"))
+		{
+			if (ImGui.Button("Add Error Line 5", 180))
+				editor.SetErrorMarker(5, "Example error message");
+			
+			if (ImGui.Button("Remove Error Line 5", 180))
+				editor.RemoveErrorMarker(5);
+			
+			if (ImGui.Button("Clear All Errors", 180))
+				editor.ClearErrorMarkers();
+		}
+		
+		// Breakpoints
+		if (ImGui.CollapsingHeader("Breakpoints"))
+		{
+			if (ImGui.Button("Add BP Line 3", 180))
+				editor.SetBreakpoint(3);
+			
+			if (ImGui.Button("Remove BP Line 3", 180))
+				editor.RemoveBreakpoint(3);
+			
+			if (ImGui.Button("Clear All BPs", 180))
+				editor.ClearBreakpoints();
+			
+			if (editor.HasBreakpoint(3))
+				ImGui.TextColored(1, 0.5, 0, 1, "Line 3 has BP");
+		}
+		
+		// Custom syntax
+		if (ImGui.CollapsingHeader("Custom Syntax"))
+		{
+			// Keyword
+			ImGui.TextDisabled("KEYWORD:");
+			ImGui.Text("current_selection");
+			if (ImGui.Button("Add Keyword", 220))
+			{
+				editor.AddKeyword("current_selection");
+				editor.SetText(editor.GetText() + "\ncurrent_selection");
+			}
+			
+			// Function
+			ImGui.TextDisabled("FUNCTION:");
+			ImGui.Text("my_example_func");
+			if (ImGui.Button("Add Function", 220))
+			{
+				editor.AddIdentifier("my_example_func", "my_example_func(x, y)\nCustom function");
+				editor.SetText(editor.GetText() + "\nmy_example_func(x, y);");
+			}
+
+			// Variable
+			ImGui.TextDisabled("BUILT-IN VARIABLE:");
+			ImGui.Text("player_hp");
+			if (ImGui.Button("Add Variable", 220))
+			{
+				editor.AddPreprocIdentifier("player_hp", "Current player health");
+				editor.SetText(editor.GetText() + "\nplayer_hp = 100;");
+			}
+			
+			// Constant
+			ImGui.TextDisabled("CONSTANT(s):");
+			ImGui.Text("MAX_HP, MIN_HP");
+			if (ImGui.Button("Add Constant", 220))
+			{
+				editor.AddConstant("MAX_HP|MIN_HP");
+				editor.SetText(editor.GetText() + "\nif (hp > MAX_HP) { }\nelse if (hp < MIN_HP) { }");
+			}
+
+			// Constant Pattern
+			ImGui.TextDisabled("PATTERN:");
+			ImGui.Text("ENEMY_* constants");
+			if (ImGui.Button("Add Pattern", 220))
+			{
+				editor.AddConstant("ENEMY_[A-Z_]+");
+				editor.SetText(editor.GetText() + "\nENEMY_GOBLIN = 0;\nENEMY_ORC = 1;");
 			}
 		}
 	
 		ImGui.Separator();
 	
-		ImGui.BeginChild("##editorcolors", 192, -1);
-		for (var i = 0; i < 14; i++)
+		// Palette Colors with alpha
+		ImGui.BeginChild("##editorcolors", -1, -1);
+		
+		var color_names = [
+			"None", "Keyword", "Number", "String", "CharLit", 
+			"Punct", "Preproc", "Ident", "KnownId", "PreprocId", 
+			"Comment", "MultiCom", "BG", "Cursor", "Select", 
+			"Error", "BP", "LineNum", "CurLine", "CurLineInact", "CurLineEdge"
+		];
+		
+		for (var i = 0; i < ImGuiTextEditorPaletteColor.CurrentLineEdge + 1; i++)
 		{
 			ImGui.PushID(i);
-			editor.SetPaletteColor(i, ImGui.ColorEdit3($"###col", editor.GetPaletteColor(i)), 255);
+			
+			// Get current color and alpha
+			var col		= editor.GetPaletteColor(i);
+			var alpha	= editor.GetPaletteAlpha(i);
+			
+			// Color editor (compact mode)
+			var new_col = ImGui.ColorEdit3($"{color_names[i]}###col", col);
+			
+			// Alpha slider (same line if there's room, or below)
+			//ImGui.SetNextItemWidth(120);
+			var new_alpha = ImGui.SliderInt($"###alpha", alpha, 0, 255);
+			
+			// Update if changed
+			if (new_col != col || new_alpha != alpha)
+				editor.SetPaletteColor(i, new_col, new_alpha);
+			
 			ImGui.PopID();
 		}
+		
 		ImGui.EndChild();
+		
 	ImGui.EndChild();
 	
+	// Editor
 	ImGui.SameLine();
-	editor.Render();
+	
+	ImGui.BeginGroup();
+	
+		// Info bar showing cursor position and status
+		ImGui.BeginChild("##info", 0, 24, ImGuiChildFlags.Border);
+			var _line	= editor.GetLine();
+			var _col	= editor.GetColumn();
+			var _total	= editor.GetTotalLines();
+			var _mod	= editor.IsModified() ? " [Modified]"	: "";
+			var _ro		= editor.IsReadOnly() ? " [Read Only]"	: "";
+			
+			ImGui.Text($"Ln {_line}/{_total}  Col {_col}{_mod}{_ro}");
+			
+			if (editor.HasSelection())
+			{
+				ImGui.SameLine();
+				ImGui.Text($"  Sel: {string_length(editor.GetSelectedText())}");
+			}
+			
+		ImGui.EndChild();
+		
+		// Editor itself
+		editor.Render("##editor", 0, -24);
+		
+	ImGui.EndGroup();
 	
 ImGui.End();
 
@@ -269,9 +431,18 @@ ImGui.Begin("ImGuizmo", , gizmowinflags);
 		
 		// Grid, aligned with a different axis configuration by default
 		// ImGui.GuizmoDrawGrid(viewMatrix, projectionMatrixGuizmo, matrix_build_identity(), 16);
+		
+		var _snap = snapT;
+		switch (ops)
+		{
+			case ImGuizmoOperation.Universal:	_snap = snapU;	break;
+			case ImGuizmoOperation.Translate:	_snap = snapT;	break;
+			case ImGuizmoOperation.Rotate:		_snap = snapR;	break;
+			case ImGuizmoOperation.Scale:		_snap = snapS;	break;
+		}
 	
 		// Manipulate, this draws the Gizmo and processes all inputs
-		ImGui.GuizmoManipulate(viewMatrix, projectionMatrixGuizmo, ops, 1, mat);
+		ImGui.GuizmoManipulate(viewMatrix, projectionMatrixGuizmo, ops, 1, mat, , keyboard_check(vk_alt) ? _snap : undefined);
 		
 	ImGui.EndChild();
 ImGui.End();

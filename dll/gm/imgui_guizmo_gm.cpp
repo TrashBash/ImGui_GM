@@ -44,21 +44,21 @@ GMFUNC(__imgui_guizmo_manipulate)
     float* _deltaMat = nullptr;
 
     if (_deltaMatrix->kind == VALUE_ARRAY) {
-        float* _deltaMat = YYGetArray<float>(arg, 5, MATRIX_SIZE);
+        _deltaMat = YYGetArray<float>(arg, 5, MATRIX_SIZE);
     }
 
     RValue* _snap = &arg[6];     GMHINT(Array<Real>);    GMDEFAULT(undefined);
     float* _snapVals = nullptr;
 
     if (_snap->kind == VALUE_ARRAY) {
-        float* _snapVals = YYGetArray<float>(arg, 6, 3);
+        _snapVals = YYGetArray<float>(arg, 6, 3);
     }
 
     RValue* _localBounds = &arg[7]; GMHINT(Array<Real>);    GMDEFAULT(undefined);
     float* _localBoundsVals = nullptr;
 
     if (_localBounds->kind == VALUE_ARRAY) {
-        float* _localBoundsVals = YYGetArray<float>(arg, 7, 6);
+        _localBoundsVals = YYGetArray<float>(arg, 7, 6);
     }
 
     ImGuizmo::Manipulate

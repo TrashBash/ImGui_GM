@@ -1,7 +1,7 @@
 /**
 *  This script includes snake_case function defintions for ImGui_GM, as an alternative to the namespaced convention
 *  To use, just drop this script into your project with ImGui_GM
-*  Generated at 14/12/2025, 9:41:54 pm
+*  Generated at 14/02/2026, 12:43:56 pm
 */
 
 /// @function imgui_initialize
@@ -1696,6 +1696,14 @@ function imgui_text_editor_get_palette_color(_handle, _index) {
 	return __imgui_text_editor_get_palette_color(_handle, _index);
 }
 
+/// @function imgui_text_editor_get_palette_alpha(_handle, _index)
+/// @argument {Real} _handle
+/// @argument {Real} _index
+/// @return {Real}
+function imgui_text_editor_get_palette_alpha(_handle, _index) {
+	return __imgui_text_editor_get_palette_alpha(_handle, _index);
+}
+
 /// @function imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha)
 /// @argument {Real} _handle
 /// @argument {Real} _index
@@ -1704,6 +1712,148 @@ function imgui_text_editor_get_palette_color(_handle, _index) {
 /// @return {Unknown<unset>}
 function imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha=255) {
 	return __imgui_text_editor_set_palette_color(_handle, _index, _color, _alpha);
+}
+
+/// @function imgui_text_editor_set_error_marker(_handle, _line, _message)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @argument {String} _message
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_error_marker(_handle, _line, _message) {
+	return __imgui_text_editor_set_error_marker(_handle, _line, _message);
+}
+
+/// @function imgui_text_editor_remove_error_marker(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_remove_error_marker(_handle, _line) {
+	return __imgui_text_editor_remove_error_marker(_handle, _line);
+}
+
+/// @function imgui_text_editor_clear_error_markers(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_clear_error_markers(_handle) {
+	return __imgui_text_editor_clear_error_markers(_handle);
+}
+
+/// @function imgui_text_editor_get_error_marker(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_get_error_marker(_handle, _line) {
+	return __imgui_text_editor_get_error_marker(_handle, _line);
+}
+
+/// @function imgui_text_editor_set_breakpoint(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_set_breakpoint(_handle, _line) {
+	return __imgui_text_editor_set_breakpoint(_handle, _line);
+}
+
+/// @function imgui_text_editor_remove_breakpoint(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_remove_breakpoint(_handle, _line) {
+	return __imgui_text_editor_remove_breakpoint(_handle, _line);
+}
+
+/// @function imgui_text_editor_clear_breakpoints(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_clear_breakpoints(_handle) {
+	return __imgui_text_editor_clear_breakpoints(_handle);
+}
+
+/// @function imgui_text_editor_has_breakpoint(_handle, _line)
+/// @argument {Real} _handle
+/// @argument {Real} _line
+/// @return {Unknown<unset>}
+function imgui_text_editor_has_breakpoint(_handle, _line) {
+	return __imgui_text_editor_has_breakpoint(_handle, _line);
+}
+
+/// @function imgui_text_editor_add_keyword(_handle, _keyword)
+/// @argument {Real} _handle
+/// @argument {String} _keyword
+/// @return {Unknown<unset>}
+function imgui_text_editor_add_keyword(_handle, _keyword) {
+	return __imgui_text_editor_add_keyword(_handle, _keyword);
+}
+
+/// @function imgui_text_editor_remove_keyword(_handle, _keyword)
+/// @argument {Real} _handle
+/// @argument {String} _keyword
+/// @return {Unknown<unset>}
+function imgui_text_editor_remove_keyword(_handle, _keyword) {
+	return __imgui_text_editor_remove_keyword(_handle, _keyword);
+}
+
+/// @function imgui_text_editor_clear_keywords(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_clear_keywords(_handle) {
+	return __imgui_text_editor_clear_keywords(_handle);
+}
+
+/// @function imgui_text_editor_add_identifier(_handle, _identifier, _declaration)
+/// @argument {Real} _handle
+/// @argument {String} _identifier
+/// @argument {String} [_declaration=]
+/// @return {Unknown<unset>}
+function imgui_text_editor_add_identifier(_handle, _identifier, _declaration="") {
+	return __imgui_text_editor_add_identifier(_handle, _identifier, _declaration);
+}
+
+/// @function imgui_text_editor_remove_identifier(_handle, _identifier)
+/// @argument {Real} _handle
+/// @argument {String} _identifier
+/// @return {Unknown<unset>}
+function imgui_text_editor_remove_identifier(_handle, _identifier) {
+	return __imgui_text_editor_remove_identifier(_handle, _identifier);
+}
+
+/// @function imgui_text_editor_clear_identifiers(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_clear_identifiers(_handle) {
+	return __imgui_text_editor_clear_identifiers(_handle);
+}
+
+/// @function imgui_text_editor_add_preproc_identifier(_handle, _identifier, _declaration)
+/// @argument {Real} _handle
+/// @argument {String} _identifier
+/// @argument {String} [_declaration=]
+/// @return {Unknown<unset>}
+function imgui_text_editor_add_preproc_identifier(_handle, _identifier, _declaration="") {
+	return __imgui_text_editor_add_preproc_identifier(_handle, _identifier, _declaration);
+}
+
+/// @function imgui_text_editor_remove_preproc_identifier(_handle, _identifier)
+/// @argument {Real} _handle
+/// @argument {String} _identifier
+/// @return {Unknown<unset>}
+function imgui_text_editor_remove_preproc_identifier(_handle, _identifier) {
+	return __imgui_text_editor_remove_preproc_identifier(_handle, _identifier);
+}
+
+/// @function imgui_text_editor_clear_preproc_identifiers(_handle)
+/// @argument {Real} _handle
+/// @return {Unknown<unset>}
+function imgui_text_editor_clear_preproc_identifiers(_handle) {
+	return __imgui_text_editor_clear_preproc_identifiers(_handle);
+}
+
+/// @function imgui_text_editor_add_constant(_handle, _constant)
+/// @argument {Real} _handle
+/// @argument {String} _constant
+/// @return {Unknown<unset>}
+function imgui_text_editor_add_constant(_handle, _constant) {
+	return __imgui_text_editor_add_constant(_handle, _constant);
 }
 
 /// @function imgui_memory_editor_window(title, buffer, offset, size)

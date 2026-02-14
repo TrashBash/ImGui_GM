@@ -526,6 +526,27 @@ GMFUNC(__imgui_text_editor_get_palette_color)
 	Result.val	= IMU32_TO_GML_RGB(c);
 }
 
+GMFUNC(__imgui_text_editor_get_palette_alpha)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _index	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	// Check if the index is valid
+	if (_index < 0 || _index >= (int32_t)TextEditor::PaletteIndex::Max)
+		__return_bool(Result, false);
+
+	const auto& _pal = _editor->GetPalette();
+	ImU32 c = _pal[_index];
+
+	// Extract alpha from ABGR format
+	int A = (c >> 24) & 0xFF;
+
+	Result.kind = VALUE_REAL;
+	Result.val	= (double)A;
+}
+
 GMFUNC(__imgui_text_editor_set_palette_color)
 {
 	int32_t _handle = YYGetInt32(arg, 0);
@@ -548,5 +569,330 @@ GMFUNC(__imgui_text_editor_set_palette_color)
 	_pal[_index] = IM_COL32(R, G, B, _alpha);
 	_editor->SetPalette(_pal);
 
+	__return_bool(Result, true);
+}
+
+// @ ERROR MARKERS
+
+GMFUNC(__imgui_text_editor_set_error_marker)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	int64_t _line			= YYGetInt64(arg, 1);
+	const char* _message	= YYGetString(arg, 2);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _markers		= _editor->GetErrorMarkers();
+	_markers[_line]		= _message ? _message : "";
+
+	_editor->SetErrorMarkers(_markers);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_remove_error_marker)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _line	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _markers = _editor->GetErrorMarkers();
+	_markers.erase(_line);
+	_editor->SetErrorMarkers(_markers);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_clear_error_markers)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	TextEditor::ErrorMarkers _empty;
+	_editor->SetErrorMarkers(_empty);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_get_error_marker)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _line	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_STRING;
+
+	auto _markers	= _editor->GetErrorMarkers();
+	auto _marker	= _markers.find(_line);
+
+	if (_marker != _markers.end())
+		__return_string(Result, _marker->second);
+
+	__return_string(Result, "");
+}
+
+// @ BREAKPOINTS
+
+GMFUNC(__imgui_text_editor_set_breakpoint)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _line	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _breakpoints = _editor->GetBreakpoints();
+	_breakpoints.insert(_line);
+	_editor->SetBreakpoints(_breakpoints);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_remove_breakpoint)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _line	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _breakpoints = _editor->GetBreakpoints();
+	_breakpoints.erase(_line);
+	_editor->SetBreakpoints(_breakpoints);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_clear_breakpoints)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	TextEditor::Breakpoints _empty;
+	_editor->SetBreakpoints(_empty);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_has_breakpoint)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+	int64_t _line	= YYGetInt64(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _breakpoints = _editor->GetBreakpoints();
+	__return_bool(Result, _breakpoints.count(_line) > 0);
+}
+
+// @ LANGUAGE DEFINITION - KEYWORDS
+
+GMFUNC(__imgui_text_editor_add_keyword)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _keyword	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_keyword)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mKeywords.insert(_keyword);
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_remove_keyword)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _keyword	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_keyword)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mKeywords.erase(_keyword);
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_clear_keywords)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mKeywords.clear();
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+// @ LANGUAGE DEFINITION - IDENTIFIERS (+ TOOLTIPS)
+
+GMFUNC(__imgui_text_editor_add_identifier)
+{
+	int32_t _handle				= YYGetInt32(arg, 0);
+	const char* _identifier		= YYGetString(arg, 1);
+	const char* _declaration	= YYGetString(arg, 2);	GMDEFAULT("");
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_identifier)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+
+	TextEditor::Identifier _id;
+	_id.mDeclaration = _declaration ? _declaration : "";
+
+	_langDef.mIdentifiers[_identifier] = _id;
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_remove_identifier)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _identifier = YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_identifier)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mIdentifiers.erase(_identifier);
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_clear_identifiers)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mIdentifiers.clear();
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+// @ LANGUAGE DEFINITION - PREPROCESSOR IDENTIFIERS
+
+GMFUNC(__imgui_text_editor_add_preproc_identifier)
+{
+	int32_t _handle				= YYGetInt32(arg, 0);
+	const char* _identifier		= YYGetString(arg, 1);
+	const char* _declaration	= YYGetString(arg, 2);	GMDEFAULT("");
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_identifier)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+
+	TextEditor::Identifier _id;
+	_id.mDeclaration = _declaration ? _declaration : "";
+
+	_langDef.mPreprocIdentifiers[_identifier] = _id;
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_remove_preproc_identifier)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _identifier = YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_identifier)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mPreprocIdentifiers.erase(_identifier);
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_clear_preproc_identifiers)
+{
+	int32_t _handle = YYGetInt32(arg, 0);
+
+	CHECK_EDITOR_BOOL;
+
+	auto _langDef = _editor->GetLanguageDefinition();
+	_langDef.mPreprocIdentifiers.clear();
+	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+// @ LANGUAGE DEFINITION - CONSTANTS
+
+GMFUNC(__imgui_text_editor_add_constant)
+{
+	int32_t _handle			= YYGetInt32(arg, 0);
+	const char* _constant	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_constant)
+		__return_bool(Result, false);
+
+	auto _langDef = _editor->GetLanguageDefinition();
+
+	// Find existing Preprocessor pattern
+	for (auto& pattern_pair : _langDef.mTokenRegexStrings)
+	{
+		if (pattern_pair.second == TextEditor::PaletteIndex::Preprocessor)
+		{
+			std::string& pattern = pattern_pair.first;
+
+			// Find last ")\\b" and insert before it
+			size_t _pos = pattern.rfind(")\\b");
+			if (_pos != std::string::npos)
+			{
+				std::string _insertion	= "|";
+				_insertion				+= _constant;
+
+				pattern.insert(_pos, _insertion);
+
+				_editor->SetLanguageDefinition(_langDef);
+				__return_bool(Result, true);
+			}
+		}
+	}
+
+	// Create new pattern if not found
+	std::string _pattern	= "\\b";
+	_pattern				+= _constant;
+	_pattern				+= "\\b";
+
+	_langDef.mTokenRegexStrings.insert
+	(
+		_langDef.mTokenRegexStrings.begin(),
+		std::make_pair<std::string, TextEditor::PaletteIndex>
+		(
+			std::move(_pattern),
+			TextEditor::PaletteIndex::Preprocessor
+		)
+	);
+
+	_editor->SetLanguageDefinition(_langDef);
 	__return_bool(Result, true);
 }
