@@ -7,6 +7,7 @@
 
 // Use a static map to store instances
 static std::unordered_map<int32_t, TextEditor*> EDITORS;
+static std::unordered_map<std::string, TextEditor::LanguageDefinition> LANG_DEF_CACHE;
 
 // Stores IDs of destroyed editors
 static std::vector<int32_t> FREE_IDS; 
@@ -127,6 +128,7 @@ GMFUNC(__imgui_text_editor_cleanup)
 	}
 
 	// Clear containers
+	LANG_DEF_CACHE.clear();
 	EDITORS.clear();
 	FREE_IDS.clear();
 	NEXT_ID = 0;
@@ -1026,6 +1028,52 @@ GMFUNC(__imgui_text_editor_clear_constants)
 	);
 
 	_editor->SetLanguageDefinition(_langDef);
+
+	__return_bool(Result, true);
+}
+
+// @ LANGUAGE DEFINITION - CACHING
+
+GMFUNC(__imgui_text_editor_save_language_def)
+{
+	int32_t _handle		= YYGetInt32(arg, 0);
+	const char* _name	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_name || strlen(_name) == 0)
+	{
+		__return_bool(Result, false);
+		return;
+	}
+
+	// Copy the full language definition into the cache
+	LANG_DEF_CACHE[_name] = _editor->GetLanguageDefinition();
+
+	__return_bool(Result, true);
+}
+
+GMFUNC(__imgui_text_editor_load_language_def)
+{
+	int32_t _handle		= YYGetInt32(arg, 0);
+	const char* _name	= YYGetString(arg, 1);
+
+	CHECK_EDITOR_BOOL;
+
+	if (!_name || strlen(_name) == 0)
+	{
+		__return_bool(Result, false);
+		return;
+	}
+
+	auto _entry = LANG_DEF_CACHE.find(_name);
+	if (_entry == LANG_DEF_CACHE.end())
+	{
+		__return_bool(Result, false);
+		return;
+	}
+
+	_editor->SetLanguageDefinition(_entry->second);
 
 	__return_bool(Result, true);
 }

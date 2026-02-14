@@ -1,7 +1,7 @@
 /**
 *  This script includes snake_case function defintions for ImGui_GM, as an alternative to the namespaced convention
 *  To use, just drop this script into your project with ImGui_GM
-*  Generated at 14/02/2026, 2:50:39 pm
+*  Generated at 14/02/2026, 4:18:36 pm
 */
 
 /// @function imgui_initialize
@@ -1869,6 +1869,22 @@ function imgui_text_editor_remove_constant(_handle, _constant) {
 /// @return {Unknown<unset>}
 function imgui_text_editor_clear_constants(_handle) {
 	return __imgui_text_editor_clear_constants(_handle);
+}
+
+/// @function imgui_text_editor_save_language_def(_handle, _name)
+/// @argument {Real} _handle
+/// @argument {String} _name
+/// @return {Unknown<unset>}
+function imgui_text_editor_save_language_def(_handle, _name) {
+	return __imgui_text_editor_save_language_def(_handle, _name);
+}
+
+/// @function imgui_text_editor_load_language_def(_handle, _name)
+/// @argument {Real} _handle
+/// @argument {String} _name
+/// @return {Unknown<unset>}
+function imgui_text_editor_load_language_def(_handle, _name) {
+	return __imgui_text_editor_load_language_def(_handle, _name);
 }
 
 /// @function imgui_memory_editor_window(title, buffer, offset, size)

@@ -2074,6 +2074,24 @@ function ImGui() constructor {
 		return __imgui_text_editor_clear_constants(_handle);
 	}
 
+	/// @function TextEditorSaveLanguageDef(_handle, _name)
+	/// @argument {Real} _handle
+	/// @argument {String} _name
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorSaveLanguageDef = function(_handle, _name) {
+		return __imgui_text_editor_save_language_def(_handle, _name);
+	}
+
+	/// @function TextEditorLoadLanguageDef(_handle, _name)
+	/// @argument {Real} _handle
+	/// @argument {String} _name
+	/// @context ImGui
+	/// @return {Unknown<unset>}
+	static TextEditorLoadLanguageDef = function(_handle, _name) {
+		return __imgui_text_editor_load_language_def(_handle, _name);
+	}
+
 	/// @function MemoryEditorShowWindow(title, buffer, offset, size)
 	/// @argument {String} title
 	/// @argument {Real} buffer

@@ -464,65 +464,67 @@ Below is a table of non-standard functions made specifically for ImGui_GM
 | `ImGui.DrawListFlagsGet(list)` | [imgui_drawlist_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_drawlist_gm.cpp#L563) |
 | `ImGui.DrawListFlagsSet(list, flags)` | [imgui_drawlist_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_drawlist_gm.cpp#L571) |
 | `ImGui.DrawListFlagToggle(list, flag)` | [imgui_drawlist_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_drawlist_gm.cpp#L580) |
-| `ImGui.TextEditorCreate()` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L85) |
-| `ImGui.TextEditorDestroy(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L104) |
-| `ImGui.TextEditorCleanup()` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L120) |
-| `ImGui.TextEditorSetText(_handle, _text)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L137) |
-| `ImGui.TextEditorGetText(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L147) |
-| `ImGui.TextEditorSetLanguage(_handle, _languageID)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L156) |
-| `ImGui.TextEditorRender(_handle, _title, _width, _height, _flags)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L177) |
-| `ImGui.TextEditorIsReadOnly(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L191) |
-| `ImGui.TextEditorSetReadOnly(_handle, _readOnly)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L200) |
-| `ImGui.TextEditorIsTextModified(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L211) |
-| `ImGui.TextEditorHasSelection(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L222) |
-| `ImGui.TextEditorSelectAll(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L231) |
-| `ImGui.TextEditorSelectWordUnderCursor(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L241) |
-| `ImGui.TextEditorSelectLine(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L251) |
-| `ImGui.TextEditorGetSelectedText(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L271) |
-| `ImGui.TextEditorSetCursorPosLineColumn(_handle, _line, _column)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L280) |
-| `ImGui.TextEditorGetCursorPosLine(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L293) |
-| `ImGui.TextEditorGetCursorPosColumn(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L305) |
-| `ImGui.TextEditorGetTotalLines(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L317) |
-| `ImGui.TextEditorCanUndo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L328) |
-| `ImGui.TextEditorCanRedo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L337) |
-| `ImGui.TextEditorUndo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L346) |
-| `ImGui.TextEditorRedo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L356) |
-| `ImGui.TextEditorIsOverwrite(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L368) |
-| `ImGui.TextEditorCopy(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L377) |
-| `ImGui.TextEditorPaste(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L387) |
-| `ImGui.TextEditorCut(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L397) |
-| `ImGui.TextEditorDelete(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L407) |
-| `ImGui.TextEditorInsertText(_handle, _text)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L417) |
-| `ImGui.TextEditorGetTabSize(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L430) |
-| `ImGui.TextEditorSetTabSize(_handle, _size)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L439) |
-| `ImGui.TextEditorIsShowingWhitespaces(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L450) |
-| `ImGui.TextEditorSetShowWhitespaces(_handle, _enable)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L459) |
-| `ImGui.TextEditorIsColorizerEnabled(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L470) |
-| `ImGui.TextEditorSetColorizerEnable(_handle, _enable)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L479) |
-| `ImGui.TextEditorSetPalette(_handle, _paletteID)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L490) |
-| `ImGui.TextEditorGetPaletteColor(_handle, _index)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L510) |
-| `ImGui.TextEditorGetPaletteAlpha(_handle, _index)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L529) |
-| `ImGui.TextEditorSetPaletteColor(_handle, _index, _color, _alpha)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L550) |
-| `ImGui.TextEditorSetErrorMarker(_handle, _line, _message)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L577) |
-| `ImGui.TextEditorRemoveErrorMarker(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L593) |
-| `ImGui.TextEditorClearErrorMarkers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L607) |
-| `ImGui.TextEditorGetErrorMarker(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L619) |
-| `ImGui.TextEditorSetBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L637) |
-| `ImGui.TextEditorRemoveBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L651) |
-| `ImGui.TextEditorClearBreakpoints(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L665) |
-| `ImGui.TextEditorHasBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L677) |
-| `ImGui.TextEditorAddKeyword(_handle, _keyword)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L690) |
-| `ImGui.TextEditorRemoveKeyword(_handle, _keyword)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L707) |
-| `ImGui.TextEditorClearKeywords(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L724) |
-| `ImGui.TextEditorAddIdentifier(_handle, _identifier, _declaration)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L739) |
-| `ImGui.TextEditorRemoveIdentifier(_handle, _identifier)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L761) |
-| `ImGui.TextEditorClearIdentifiers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L778) |
-| `ImGui.TextEditorAddPreprocIdentifier(_handle, _identifier, _declaration)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L793) |
-| `ImGui.TextEditorRemovePreprocIdentifier(_handle, _identifier)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L815) |
-| `ImGui.TextEditorClearPreprocIdentifiers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L832) |
-| `ImGui.TextEditorAddConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L847) |
-| `ImGui.TextEditorRemoveConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L921) |
-| `ImGui.TextEditorClearConstants(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L1006) |
+| `ImGui.TextEditorCreate()` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L86) |
+| `ImGui.TextEditorDestroy(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L105) |
+| `ImGui.TextEditorCleanup()` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L121) |
+| `ImGui.TextEditorSetText(_handle, _text)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L139) |
+| `ImGui.TextEditorGetText(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L149) |
+| `ImGui.TextEditorSetLanguage(_handle, _languageID)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L158) |
+| `ImGui.TextEditorRender(_handle, _title, _width, _height, _flags)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L179) |
+| `ImGui.TextEditorIsReadOnly(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L193) |
+| `ImGui.TextEditorSetReadOnly(_handle, _readOnly)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L202) |
+| `ImGui.TextEditorIsTextModified(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L213) |
+| `ImGui.TextEditorHasSelection(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L224) |
+| `ImGui.TextEditorSelectAll(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L233) |
+| `ImGui.TextEditorSelectWordUnderCursor(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L243) |
+| `ImGui.TextEditorSelectLine(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L253) |
+| `ImGui.TextEditorGetSelectedText(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L273) |
+| `ImGui.TextEditorSetCursorPosLineColumn(_handle, _line, _column)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L282) |
+| `ImGui.TextEditorGetCursorPosLine(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L295) |
+| `ImGui.TextEditorGetCursorPosColumn(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L307) |
+| `ImGui.TextEditorGetTotalLines(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L319) |
+| `ImGui.TextEditorCanUndo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L330) |
+| `ImGui.TextEditorCanRedo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L339) |
+| `ImGui.TextEditorUndo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L348) |
+| `ImGui.TextEditorRedo(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L358) |
+| `ImGui.TextEditorIsOverwrite(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L370) |
+| `ImGui.TextEditorCopy(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L379) |
+| `ImGui.TextEditorPaste(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L389) |
+| `ImGui.TextEditorCut(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L399) |
+| `ImGui.TextEditorDelete(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L409) |
+| `ImGui.TextEditorInsertText(_handle, _text)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L419) |
+| `ImGui.TextEditorGetTabSize(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L432) |
+| `ImGui.TextEditorSetTabSize(_handle, _size)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L441) |
+| `ImGui.TextEditorIsShowingWhitespaces(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L452) |
+| `ImGui.TextEditorSetShowWhitespaces(_handle, _enable)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L461) |
+| `ImGui.TextEditorIsColorizerEnabled(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L472) |
+| `ImGui.TextEditorSetColorizerEnable(_handle, _enable)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L481) |
+| `ImGui.TextEditorSetPalette(_handle, _paletteID)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L492) |
+| `ImGui.TextEditorGetPaletteColor(_handle, _index)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L512) |
+| `ImGui.TextEditorGetPaletteAlpha(_handle, _index)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L531) |
+| `ImGui.TextEditorSetPaletteColor(_handle, _index, _color, _alpha)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L552) |
+| `ImGui.TextEditorSetErrorMarker(_handle, _line, _message)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L579) |
+| `ImGui.TextEditorRemoveErrorMarker(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L595) |
+| `ImGui.TextEditorClearErrorMarkers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L609) |
+| `ImGui.TextEditorGetErrorMarker(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L621) |
+| `ImGui.TextEditorSetBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L639) |
+| `ImGui.TextEditorRemoveBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L653) |
+| `ImGui.TextEditorClearBreakpoints(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L667) |
+| `ImGui.TextEditorHasBreakpoint(_handle, _line)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L679) |
+| `ImGui.TextEditorAddKeyword(_handle, _keyword)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L692) |
+| `ImGui.TextEditorRemoveKeyword(_handle, _keyword)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L709) |
+| `ImGui.TextEditorClearKeywords(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L726) |
+| `ImGui.TextEditorAddIdentifier(_handle, _identifier, _declaration)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L741) |
+| `ImGui.TextEditorRemoveIdentifier(_handle, _identifier)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L763) |
+| `ImGui.TextEditorClearIdentifiers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L780) |
+| `ImGui.TextEditorAddPreprocIdentifier(_handle, _identifier, _declaration)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L795) |
+| `ImGui.TextEditorRemovePreprocIdentifier(_handle, _identifier)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L817) |
+| `ImGui.TextEditorClearPreprocIdentifiers(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L834) |
+| `ImGui.TextEditorAddConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L849) |
+| `ImGui.TextEditorRemoveConstant(_handle, _constant)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L923) |
+| `ImGui.TextEditorClearConstants(_handle)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L1008) |
+| `ImGui.TextEditorSaveLanguageDef(_handle, _name)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L1037) |
+| `ImGui.TextEditorLoadLanguageDef(_handle, _name)` | [imgui_ext_colortextedit_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_colortextedit_gm.cpp#L1056) |
 | `ImGui.MemoryEditorShowWindow(title, buffer, offset, size)` | [imgui_ext_memeditor_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_memeditor_gm.cpp#L5) |
 | `ImGui.MemoryEditorDrawContents(buffer, offset, size)` | [imgui_ext_memeditor_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_ext_memeditor_gm.cpp#L18) |
 | `ImGui.AddFontFromFile(file, size)` | [imgui_fonts_gm.cpp](https://github.com/nommiin/ImGui_GM/blob/main/dll/imgui_fonts_gm.cpp#L25) |

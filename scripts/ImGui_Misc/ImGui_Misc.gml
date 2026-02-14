@@ -637,6 +637,20 @@ function ImGuiTextEditor(title, initialText = "", languageID = 0) constructor
 		__imgui_text_editor_clear_constants(handle);
 		return self;
 	}
+	
+	// @ LANGUAGE DEFINITION - CACHING
+
+	static SaveLanguageDef = function(name)
+	{
+		__imgui_text_editor_save_language_def(handle, name);
+		return self;
+	}
+
+	static LoadLanguageDef = function(name)
+	{
+		__imgui_text_editor_load_language_def(handle, name);
+		return self;
+	}
 }
 
 
